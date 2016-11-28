@@ -74,13 +74,16 @@
     border: none;
     background-color: transparent;
 }
+.search .ion-ios-arrow-back {
+    margin-top: 0.3em; 
+}
 .candidates .ion-ios-arrow-back{
-    margin-top: 1.3em; 
+    margin-top: 0.3em; 
 }
 .logo-title {
     display: block;
     width: 32%;
-    margin: 2em auto 2em;
+    margin: 1em auto 1em;
 }
 
 .animateContent {
