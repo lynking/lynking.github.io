@@ -73,7 +73,7 @@
     <script id="search.html" type="text/ng-template">
       <ion-view>
         <ion-content class="padding search" scroll="false">
-          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" ng-mobile-click="goBack()" nav-direction="back"></button>
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <div class="animateContent">
             <!--<span class="user-avatar" style="border-radius:106.5px; width: 213px; height: 213px; display: block; position: relative; background-image:url('https://media.licdn.com/media/AAEAAQAAAAAAAAlmAAAAJDdlYTk3MzRiLTdmNGYtNGU3YS1iYWQ3LTM1NWVkMWMyNWUwNA.jpg'); background-size: cover; background-repeat: no-repeat"></span>-->
@@ -88,13 +88,13 @@
     <script id="candidates.html" type="text/ng-template">
       <ion-view>
         <ion-content class="padding candidates">
-          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" ng-mobile-click="goBack()" nav-direction="back"></button>
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <!--<ion-slides  options="options" slider="data.slider">-->
           <ion-slides options="data.sliderOptions" slider="data.sliderDelegate">
             <ion-slide-page ng-repeat="person in personsList track by $index">
               <div class="box">
-                <a style="text-decoration:none;" ng-click="lookDetail()" ng-mobile-click="lookDetail()"> <!--ng-href="{{person.profileUrl}}"-->
+                <a style="text-decoration:none;" ng-click="lookDetail()"> <!--ng-href="{{person.profileUrl}}"-->
                   <div class="list card">
                     <div class="item item-image" style="background-image:url('{{person.pictureUrl}}'); background-size:cover; background-position: center"></div>
                     <div class="item item-avatar">
@@ -134,7 +134,7 @@
     <script id="details.html" type="text/ng-template">
       <ion-view>
         <ion-content class="details" id="detail-content">
-          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" ng-mobile-click="goBack()" nav-direction="back"></button>
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <img class="avatar" ng-src="{{personDetail.pictureUrl}}" alt="User Avatar">
           <h2>{{personDetail.name}}</h2>
