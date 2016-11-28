@@ -219,6 +219,8 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   document.getElementById("posi-btn").onclick = function() {
     getLocation(function(){
       console.info('location updated');
+      alert("location updated!");
+      location.reload();
     }, function(){
       console.error('location error');
     });
