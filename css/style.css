@@ -1,3 +1,8 @@
+/* no bounce effect after add to screen */
+body, html {
+  position: fixed;
+}
+
 /* ken burn animation */
 @keyframes kenburns {
     0% {
