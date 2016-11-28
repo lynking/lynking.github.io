@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
-var REDIRECT_URL = 'https://lynking.github.io';//'http://www.lynking.us';//'http://www.lynking.us';
+var REDIRECT_URL = 'http://localhost:8000';//'https://lynking.github.io';//'http://www.lynking.us';//'http://www.lynking.us';
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
@@ -249,6 +249,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     redirectName = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h2')[0].innerText;
     redirectHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
     redirectDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
+    redirectSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerText;
     //window.location.href = redirectURL;
     $state.go('details');
   }
@@ -268,6 +269,7 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
     pictureUrl: redirectAvatar,
     name: redirectName,
     headline: redirectHeadLine,
-    distance: redirectDistance
+    distance: redirectDistance,
+    summary: redirectSummary
   }
 });

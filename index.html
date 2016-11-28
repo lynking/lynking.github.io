@@ -101,6 +101,7 @@
                       <h2>{{person.name}}</h2>
                       <h3>{{person.headline}}</h3>
                       <p>{{person.distance}} meters away</p>
+                      <span class="summary" style="visibility:hidden; width: 0; height: 0;">{{person.summary}}</span>
                     </div>
                   </div>
                 </a>
@@ -139,6 +140,7 @@
           <h2>{{personDetail.name}}</h2>
           <h3>{{personDetail.headline}}</h3>
           <p>{{personDetail.distance}}</p>
+          <p>{{personDetail.summary}}</p>
           <div class="bottomBtns">
             <button id="posi-detail-btn" class="btn-group lower-btn pos-btn" style="visibility: hidden; background-image:url('./img/pos.png'); background-size:contain; background-repeat:no-repeat;"></button>
             <button id="nope-detail-btn" class="btn-group higher-btn nope-btn" style="background-image:url('./img/nope.png'); background-size:contain; background-repeat:no-repeat;"></button>
