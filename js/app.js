@@ -157,7 +157,7 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
 
   console.log(window.location.href);
   var currentURL = window.location.href;
-  if(currentURL.includes("code")) {
+  if(currentURL.indexOf("code") > -1) {
     var start = currentURL.indexOf("code");
     var end = currentURL.indexOf("state");
     var code = currentURL.substring(start+5, end-1);
