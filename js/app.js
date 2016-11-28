@@ -5,59 +5,14 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
-var REDIRECT_URL = 'http://www.lynking.us';//'http://localhost:8000';
+var REDIRECT_URL = 'http://www.lynking.us';//'http://www.lynking.us';
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
 var SERVER_URL = 'http://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
 
-nameApp.run(function() {
-    if(window.StatusBar) {
-      // StatusBar.overlaysWebView(true);
-      // StatusBar.styleLightContent();
-      StatusBar.styleBlackTranslucent();
-      // StatusBar.styleBlackOpaque();
-    }
-});
 
-nameApp.config(function($stateProvider, $urlRouterProvider) {
- 
-  $stateProvider
-    .state('index', {
-      url: '/',
-      templateUrl: 'index.html',
-      controller: 'IndexCtrl'
-    })
-    .state('search', {
-      url: '/search',
-      templateUrl: 'search.html',
-      controller: 'SearchCtrl'
-    })
-    .state('candidates', {
-      url: '/candidates',
-      templateUrl: 'candidates.html',
-      controller: 'CandidatesCtrl'
-    })
-    .state('details', {
-      url: '/details',
-      templateUrl: 'details.html',
-      controller: 'DetailsCtrl'
-    });
- 
-  $urlRouterProvider.otherwise("/");
-
-});
-
-nameApp.controller('IndexCtrl', function($scope, $state) {
-  $scope.redirect = function(){
-    var linkedAuthUrl = 'https://www.linkedin.com/oauth/v2/authorization?response_type=code';
-    linkedAuthUrl+= '&client_id='+CLIENT_ID;
-    linkedAuthUrl+= '&redirect_uri='+encodeURIComponent(REDIRECT_URL);
-    linkedAuthUrl+= '&state='+TOKEN_STATE;
-    location.href= linkedAuthUrl;
-  };
-
-  /**
+/**
    * get Token from linkedin
    * 
    * @param {object} params
@@ -108,6 +63,89 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
         });
   }
 
+  /**
+   * add user's location
+   * 
+   * @param {string} linkedinId
+   * @param {number} lat
+   * @param {number} lng
+   * @returns
+   */
+  function addLocation(linkedinId, lat, lng) {
+    return $.ajax({
+      url: SERVER_URL + '/api/user/'+linkedinId+'/location',
+      type: 'POST',
+      data: {
+        lat: lat,
+        lng: lng
+      }
+    });
+  }
+
+  function getLocation(success, fail) {
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var crd = pos.coords;
+      var lati = crd.latitude;
+      var longi = crd.longitude;
+      var accu = crd.accuracy; // in meters
+      // alert("relocatING...");
+      addLocation(profileLinkedinId, lati, longi)
+      .then(function(res){
+        console.log('Location updated');
+        success && success({lat: lati, lng: longi}, res);
+      });
+    }, function(err){
+      fail && fail(err);
+      console.warn('ERROR(' + err.code + '): ' + err.message);
+    });
+  }
+
+nameApp.run(function() {
+    if(window.StatusBar) {
+      // StatusBar.overlaysWebView(true);
+      // StatusBar.styleLightContent();
+      StatusBar.styleBlackTranslucent();
+      // StatusBar.styleBlackOpaque();
+    }
+});
+
+nameApp.config(function($stateProvider, $urlRouterProvider) {
+ 
+  $stateProvider
+    .state('index', {
+      url: '/',
+      templateUrl: 'index.html',
+      controller: 'IndexCtrl'
+    })
+    .state('search', {
+      url: '/search',
+      templateUrl: 'search.html',
+      controller: 'SearchCtrl'
+    })
+    .state('candidates', {
+      url: '/candidates',
+      templateUrl: 'candidates.html',
+      controller: 'CandidatesCtrl'
+    })
+    .state('details', {
+      url: '/details',
+      templateUrl: 'details.html',
+      controller: 'DetailsCtrl'
+    });
+ 
+  $urlRouterProvider.otherwise("/");
+
+});
+
+nameApp.controller('IndexCtrl', function($scope, $state) {
+  $scope.redirect = function(){
+    var linkedAuthUrl = 'https://www.linkedin.com/oauth/v2/authorization?response_type=code';
+    linkedAuthUrl+= '&client_id='+CLIENT_ID;
+    linkedAuthUrl+= '&redirect_uri='+encodeURIComponent(REDIRECT_URL);
+    linkedAuthUrl+= '&state='+TOKEN_STATE;
+    location.href= linkedAuthUrl;
+  };
+
   console.log(window.location.href);
   var currentURL = window.location.href;
   if(currentURL.includes("code")) {
@@ -128,7 +166,7 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
     .then(function(profile){
       console.log('profile', profile);
       $state.go('search');
-      profile = profile;
+      profileLinkedinId = profile.linkedinId;
       profilePictureUrl = profile.pictureUrl;
     });
   }
@@ -144,10 +182,17 @@ nameApp.controller('SearchCtrl', function($scope, $state, $ionicHistory) {
     $ionicHistory.goBack();
   }
   document.getElementById("avatar").setAttribute("src", profilePictureUrl);
-  setTimeout(function(){ 
-    console.log("Hello"); 
-    $state.go('candidates');
-  }, 3000);
+
+  getLocation(function(){
+      console.info('location updated');
+      $state.go('candidates');
+    }, function(){
+      var needRefresh = confirm('Failed to get Location, Want to refresh ?');
+      if(needRefresh) {
+        location.reload();
+      }
+      console.error('location error');
+    });
 });
 
 nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate) {
@@ -160,27 +205,22 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   // fake data, get data from backend
   $.ajax({
     method: 'GET',
-    url: SERVER_URL+'/api/user/'+profile.linkedinId+'/match'
+    url: SERVER_URL+'/api/user/'+profileLinkedinId+'/match?distance=1500'
   }).then(function successCallback(response) {
     // console.log(response);
     // console.log(response.data[0].name);
-    console.log(response.data.users);
-    $scope.personsList = response.data.users;
+    console.log(response.users);
+    $scope.personsList = response.users;
   }, function errorCallback(response) {
-    console.log("data not get")
+    console.log("data not get");
   });
   
   // refresh position
   document.getElementById("posi-btn").onclick = function() {
-    navigator.geolocation.getCurrentPosition(function(pos){
-      var crd = pos.coords;
-      var lati = crd.latitude;
-      var longi = crd.longitude;
-      var accu = crd.accuracy; // in meters
-      alert("relocatING...");
-      console.log("success" + lati);
-    }, function(err){
-      console.warn('ERROR(' + err.code + '): ' + err.message);
+    getLocation(function(){
+      console.info('location updated');
+    }, function(){
+      console.error('location error');
     });
   }
 
