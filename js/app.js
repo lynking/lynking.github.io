@@ -220,7 +220,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     getLocation(function(){
       console.info('location updated');
       alert("location updated!");
-      location.reload();
+      // location.reload();
     }, function(){
       console.error('location error');
     });
