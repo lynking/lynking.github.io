@@ -9,7 +9,7 @@ var REDIRECT_URL = 'https://lynking.github.io';//http://www.lynking.us';//'http:
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
-var SERVER_URL = 'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
+var SERVER_URL = 'https://4113studio.com';//'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
 
 
 /**
