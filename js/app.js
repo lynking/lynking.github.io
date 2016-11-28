@@ -127,6 +127,8 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
     })
     .then(function(profile){
       console.log('profile', profile);
+      $state.go('search');
+      profilePictureUrl = profile.pictureUrl;
     });
   }
 
@@ -140,6 +142,7 @@ nameApp.controller('SearchCtrl', function($scope, $state, $ionicHistory) {
   $scope.goBack = function(){
     $ionicHistory.goBack();
   }
+  document.getElementById("avatar").setAttribute("src", profilePictureUrl);
   setTimeout(function(){ 
     console.log("Hello"); 
     $state.go('candidates');
