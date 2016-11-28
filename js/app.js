@@ -37,6 +37,11 @@ nameApp.config(function($stateProvider, $urlRouterProvider) {
       url: '/candidates',
       templateUrl: 'candidates.html',
       controller: 'CandidatesCtrl'
+    })
+    .state('details', {
+      url: '/details',
+      templateUrl: 'details.html',
+      controller: 'DetailsCtrl'
     });
  
   $urlRouterProvider.otherwise("/");
@@ -141,15 +146,15 @@ nameApp.controller('SearchCtrl', function($scope, $state, $ionicHistory) {
   }, 3000);
 });
 
-nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHistory) {
+nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate) {
   $scope.goBack = function(){
     $ionicHistory.goBack();
   }
-  $scope.go = function(path) {
+  $scope.go = function(path) { 
     $location.path( path );
   }
   // fake data, get data from backend
-  $http({
+  $.ajax({
     method: 'GET',
     url: SERVER_URL+'/api/user/Aroshi%20Handa/match'
   }).then(function successCallback(response) {
@@ -161,9 +166,64 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     console.log("data not get")
   });
   
-  document.getElementById("yeah-btn").onclick = function() {
-    var redirectURL = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('a')[0].getAttribute("href");
-    window.location.href = redirectURL;
+  // refresh position
+  document.getElementById("posi-btn").onclick = function() {
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var crd = pos.coords;
+      var lati = crd.latitude;
+      var longi = crd.longitude;
+      var accu = crd.accuracy; // in meters
+      alert("relocatING...");
+      console.log("success" + lati);
+    }, function(err){
+      console.warn('ERROR(' + err.code + '): ' + err.message);
+    });
   }
 
+  // next user
+  $scope.data = {};
+  $scope.data.currentPage = 0;
+  var setupSlider = function() {
+    //some options to pass to our slider
+    $scope.data.sliderOptions = {
+      initialSlide: 0,
+      direction: 'horizontal', //or vertical
+      speed: 300, //0.3s transition
+      pagination: false
+    };
+  }
+  setupSlider();
+  document.getElementById("nope-btn").onclick = function() {
+    $scope.data.sliderDelegate.slideNext();
+  }
+
+  // select this user
+  document.getElementById("yeah-btn").onclick = function(){$scope.lookDetail();}
+  $scope.lookDetail = function(){
+    var tmpAvatarString = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName("item-image")[0].getAttribute("style");
+    redirectAvatar = tmpAvatarString.substring(tmpAvatarString.indexOf("('")+2,tmpAvatarString.indexOf("')"));
+    redirectName = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h2')[0].innerText;
+    redirectHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
+    redirectDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
+    //window.location.href = redirectURL;
+    $state.go('details');
+  }
+});
+
+nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
+  $scope.goBack = function(){
+    $ionicHistory.goBack();
+  }
+  document.getElementById("nope-detail-btn").onclick = function() {
+    $ionicHistory.goBack();
+  }
+  document.getElementById("yeah-detail-btn").onclick = function() {
+    alert("invitation sent! :)");
+  }
+  $scope.personDetail = {
+    pictureUrl: redirectAvatar,
+    name: redirectName,
+    headline: redirectHeadLine,
+    distance: redirectDistance
+  }
 });

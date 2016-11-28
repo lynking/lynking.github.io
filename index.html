@@ -55,14 +55,14 @@
   
     <script id="index.html" type="text/ng-template">
       <ion-view>  
-        <ion-pane>
+        <ion-pane scroll="false">
           <div id="imageContainer" style="position:absolute; height:100%; width:100%; overflow: hidden; background-color:#222628;">
             <img src="./img/bg1.png" alt="BG image" style="height:100%;">
           </div>
           
           <div class="footer-sec" style="display:block; position: absolute; bottom:0; left:0; right:0;">
             <img class="image" src="./img/logo-big.png" style=" display: block; width: 60%; margin: 0 auto; " alt="LynKing Logo">
-            <button id="signinbtn" ng-click="redirect()" class="button icon-left ion-social-linkedin button-block button-calm" style="min-height:0; width: 52%; margin: 1em auto 2em; font-size: 1em;">Sign in with LinkedIn</button>
+            <button id="signinbtn" ng-click="changePage()" class="button icon-left ion-social-linkedin button-block button-calm" style="min-height:0; width: 52%; margin: 1em auto 2em; font-size: 1em;">Sign in with LinkedIn</button>
             <!--<div style="width: 52%; margin: 1em auto 2em; font-size: 1em; min-height:30px; background-color:#007ab6; border-radius: 4px; text-align: center;"><script type="in/Login"></script>-->
             <!-- changePage() -->
           </div>
@@ -72,7 +72,7 @@
     
     <script id="search.html" type="text/ng-template">
       <ion-view>
-        <ion-content class="padding">
+        <ion-content class="padding search" scroll="false">
           <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <div class="animateContent">
@@ -87,13 +87,14 @@
 
     <script id="candidates.html" type="text/ng-template">
       <ion-view>
-        <ion-content class="padding candidates" scroll="false">
+        <ion-content class="padding candidates">
           <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
-          <ion-slides  options="options" slider="data.slider">
+          <!--<ion-slides  options="options" slider="data.slider">-->
+          <ion-slides options="data.sliderOptions" slider="data.sliderDelegate">
             <ion-slide-page ng-repeat="person in personsList track by $index">
               <div class="box">
-                <a style="text-decoration:none;" ng-href="{{person.profileUrl}}">
+                <a style="text-decoration:none;" ng-click="lookDetail()"> <!--ng-href="{{person.profileUrl}}"-->
                   <div class="list card">
                     <div class="item item-image" style="background-image:url('{{person.pictureUrl}}'); background-size:cover; background-position: center"></div>
                     <div class="item item-avatar">
@@ -105,11 +106,45 @@
                 </a>
               </div>
             </ion-slide-page>
+            <!-- EOF slide page -->
+            <ion-slide-page>
+              <div class="box">
+                <a style="text-decoration:none;">
+                  <div class="list card">
+                    <div class="item item-image" style="background-image:url('https://s-media-cache-ak0.pinimg.com/564x/6b/2b/71/6b2b7195bbcd1fd5e4507997c8baf74d.jpg'); background-size:cover; background-position: center"></div>
+                    <div class="item item-avatar">
+                      <h2>NO MORE</h2>
+                      <h3></h3>
+                      <p>try refresh by press locate button!</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </ion-slide-page>
           </ion-slides>
           <button id="posi-btn" class="btn-group lower-btn pos-btn" style="background-image:url('./img/pos.png'); background-size:contain; background-repeat:no-repeat;"></button>
           <button id="nope-btn" class="btn-group higher-btn nope-btn" style="background-image:url('./img/nope.png'); background-size:contain; background-repeat:no-repeat;"></button>
           <button id="yeah-btn" class="btn-group higher-btn yeap-btn" style="background-image:url('./img/yeap.png'); background-size:contain; background-repeat:no-repeat;"></button>
           <button id="srch-btn" class="btn-group lower-btn srch-btn" style="background-image:url('./img/srch.png'); background-size:contain; background-repeat:no-repeat;"></button>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="details.html" type="text/ng-template">
+      <ion-view>
+        <ion-content class="details" id="detail-content">
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
+          <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
+          <img class="avatar" ng-src="{{personDetail.pictureUrl}}" alt="User Avatar">
+          <h2>{{personDetail.name}}</h2>
+          <h3>{{personDetail.headline}}</h3>
+          <p>{{personDetail.distance}}</p>
+          <div class="bottomBtns">
+            <button id="posi-detail-btn" class="btn-group lower-btn pos-btn" style="visibility: hidden; background-image:url('./img/pos.png'); background-size:contain; background-repeat:no-repeat;"></button>
+            <button id="nope-detail-btn" class="btn-group higher-btn nope-btn" style="background-image:url('./img/nope.png'); background-size:contain; background-repeat:no-repeat;"></button>
+            <button id="yeah-detail-btn" class="btn-group higher-btn yeap-btn" style="background-image:url('./img/yeap.png'); background-size:contain; background-repeat:no-repeat;"></button>
+            <button id="srch-detail-btn" class="btn-group lower-btn srch-btn" style="visibility: hidden; background-image:url('./img/srch.png'); background-size:contain; background-repeat:no-repeat;"></button>
+          </div>
         </ion-content>
       </ion-view>
     </script>

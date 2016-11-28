@@ -1,3 +1,8 @@
+/* no bounce effect after add to screen */
+body, html {
+  position: fixed;
+}
+
 /* ken burn animation */
 @keyframes kenburns {
     0% {
@@ -74,13 +79,16 @@
     border: none;
     background-color: transparent;
 }
+.search .ion-ios-arrow-back {
+    margin-top: 0.3em; 
+}
 .candidates .ion-ios-arrow-back{
-    margin-top: 1.3em; 
+    margin-top: -0.8em; 
 }
 .logo-title {
     display: block;
     width: 32%;
-    margin: 2em auto 2em;
+    margin: 1em auto 1em;
 }
 
 .animateContent {
@@ -114,6 +122,12 @@
 }
 ion-slides {
     height: 33em;
+}
+ion-slide-box {
+    height: 33em;
+}
+box {
+    height: 30em;
 }
 .swiper-pagination {
     display: none;
@@ -165,8 +179,19 @@ ion-slides {
     height: 70px;
 }
 
-.IN-widget a {
-
-    vertical-align: middle;
-    padding-top: 10px!important;
+#detail-content .avatar {
+    max-width: 100%;
+}
+#detail-content h2, #detail-content h3, #detail-content p {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+#detail-content .bottomBtns {
+    width: 100%;
+    position: relative;
+}
+#detail-content .logo-title {
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
