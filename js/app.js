@@ -260,7 +260,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     redirectName = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h2')[0].innerText;
     redirectHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
     redirectDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
-    redirectSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerText;
+    redirectSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerHTML;
     //window.location.href = redirectURL;
     $state.go('details');
   }
