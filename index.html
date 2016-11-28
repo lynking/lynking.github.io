@@ -90,7 +90,7 @@
   
     <script id="index.html" type="text/ng-template">
       <ion-view>  
-        <ion-pane>
+        <ion-pane scroll="false">
           <div id="imageContainer" style="position:absolute; height:100%; width:100%; overflow: hidden; background-color:#222628;">
             <img src="./img/bg1.png" alt="BG image" style="height:100%;">
           </div>
@@ -107,7 +107,7 @@
     
     <script id="search.html" type="text/ng-template">
       <ion-view>
-        <ion-content class="padding">
+        <ion-content class="padding" scroll="false">
           <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <div class="animateContent">
