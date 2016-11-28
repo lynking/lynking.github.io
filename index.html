@@ -134,7 +134,7 @@
     <script id="details.html" type="text/ng-template">
       <ion-view>
         <ion-content class="details" id="detail-content">
-          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" ng-mobile-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <img class="avatar" ng-src="{{personDetail.pictureUrl}}" alt="User Avatar">
           <h2>{{personDetail.name}}</h2>
