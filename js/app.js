@@ -5,11 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
-var REDIRECT_URL = 'http://localhost:8000';//http://www.lynking.us';//'http://www.lynking.us';
+var REDIRECT_URL = 'https://lynking.github.io';//http://www.lynking.us';//'http://www.lynking.us';
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
-var SERVER_URL = 'http://localhost:8080';//'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
+var SERVER_URL = 'https://4113studio.com';//'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
 
 nameApp.directive("ngMobileClick", [function () {
     return function (scope, elem, attrs) {
