@@ -186,3 +186,7 @@ box {
     width: 100%;
     position: relative;
 }
+#detail-content .logo-title {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
