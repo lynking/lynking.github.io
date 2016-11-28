@@ -39,9 +39,41 @@ nameApp.config(function($stateProvider, $urlRouterProvider) {
 });
 
 nameApp.controller('IndexCtrl', function($scope, $state) {
+  $scope.redirect = function(){
+    //location.href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=81xcrsa3u39vr4&redirect_uri=https%3A%2F%2Flynking.github.io&state=lynking123"
+    location.href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=81xcrsa3u39vr4&redirect_uri=http%3A%2F%2Flocalhost%3A8000&state=lynking123"
+  };
+
+  console.log(window.location.href);
+  var currentURL = window.location.href;
+  if(currentURL.includes("code")) {
+    var start = currentURL.indexOf("code");
+    var end = currentURL.indexOf("state");
+    var code = currentURL.substring(start+5, end-1);
+    var reqBody = {
+          grant_type: 'authorization_code',
+          code: code,
+          redirect_uri: 'http://localhost:8000',
+          client_id: '81xcrsa3u39vr4',
+          client_secret: '2P3itf8w1G5kgnY9'
+      };
+    $.ajax({
+      url: 'https://www.linkedin.com/oauth/v2/accessToken', 
+      type: 'POST',
+      data: JSON.stringify(reqBody),
+      success: function(data, textStatus, jqXHR) {
+        console.log(data.access_token);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("get token fail")
+      }
+    })
+  }
+
   $scope.changePage = function(){
     $state.go('search');
   }
+  
 });
  
 nameApp.controller('SearchCtrl', function($scope, $state, $ionicHistory) {
