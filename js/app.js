@@ -32,6 +32,11 @@ nameApp.config(function($stateProvider, $urlRouterProvider) {
       url: '/candidates',
       templateUrl: 'candidates.html',
       controller: 'CandidatesCtrl'
+    })
+    .state('details', {
+      url: '/details',
+      templateUrl: 'details.html',
+      controller: 'DetailsCtrl'
     });
  
   $urlRouterProvider.otherwise("/");
@@ -57,17 +62,19 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
           client_id: '81xcrsa3u39vr4',
           client_secret: '2P3itf8w1G5kgnY9'
       };
-    $.ajax({
-      url: 'https://www.linkedin.com/oauth/v2/accessToken', 
-      type: 'POST',
+    fetch('https://www.linkedin.com/oauth/v2/accessToken', {
+      method: 'POST',
       data: JSON.stringify(reqBody),
-      success: function(data, textStatus, jqXHR) {
-        console.log(data.access_token);
+      headers: {
+        // 'Allow-Control-Allow-Origin': '*',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Host': 'www.linkedin.com'
       },
-      error: function(jqXHR, textStatus, errorThrown){
-        console.log("get token fail")
-      }
-    })
+    }).then(function (response) {
+      console.log(response.access_token);
+    }, function (response) {
+      console.log("get token fail")
+    });
   }
 
   $scope.changePage = function(){
@@ -86,29 +93,99 @@ nameApp.controller('SearchCtrl', function($scope, $state, $ionicHistory) {
   }, 3000);
 });
 
-nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHistory) {
+nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate) {
   $scope.goBack = function(){
     $ionicHistory.goBack();
   }
-  $scope.go = function(path) {
+  $scope.go = function(path) { 
     $location.path( path );
   }
   // fake data, get data from backend
-  $http({
+  fetch('http://lynking-node.us-west-1.elasticbeanstalk.com/api/user/Aroshi%20Handa/match', {
     method: 'GET',
-    url: 'http://lynking-node.us-west-1.elasticbeanstalk.com/api/user/Aroshi%20Handa/match'
-  }).then(function successCallback(response) {
-    // console.log(response);
-    // console.log(response.data[0].name);
-    console.log(response.data.users);
-    $scope.personsList = response.data.users;
-  }, function errorCallback(response) {
+  }).then(function (response) {
+    // console.log(response.data.users);
+    // $scope.personsList = response.data.users;
+    $scope.personsList = [{
+      profileUrl: "http://www.baidu.com",
+      pictureUrl: "http://ww2.sinaimg.cn/large/7359a3efgw1f8kxu5rp5zj20m80yo47d.jpg",
+      name: 1111111,
+      headline: "students",
+      distance: 100
+    },{
+      profileUrl: "http://www.baidu.com",
+      pictureUrl: "http://ww1.sinaimg.cn/large/7359a3efgw1f8gaphogxxj21kw168adk.jpg",
+      name: 2222222,
+      headline: "students",
+      distance: 200
+    },{
+      profileUrl: "http://www.baidu.com",
+      pictureUrl: "http://ww3.sinaimg.cn/large/7359a3efgw1f9ydiucfdhj20qo0hstbb.jpg",
+      name: 3333333,
+      headline: "students",
+      distance: 300
+    }]
+  }, function (response) {
     console.log("data not get")
   });
   
-  document.getElementById("yeah-btn").onclick = function() {
-    var redirectURL = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('a')[0].getAttribute("href");
-    window.location.href = redirectURL;
+  // refresh position
+  document.getElementById("posi-btn").onclick = function() {
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var crd = pos.coords;
+      var lati = crd.latitude;
+      var longi = crd.longitude;
+      var accu = crd.accuracy; // in meters
+      console.log("success" + lati);
+    }, function(err){
+      console.warn('ERROR(' + err.code + '): ' + err.message);
+    });
   }
 
+  // next user
+  $scope.data = {};
+  $scope.data.currentPage = 0;
+  var setupSlider = function() {
+    //some options to pass to our slider
+    $scope.data.sliderOptions = {
+      initialSlide: 0,
+      direction: 'horizontal', //or vertical
+      speed: 300, //0.3s transition
+      pagination: false
+    };
+  }
+  setupSlider();
+  document.getElementById("nope-btn").onclick = function() {
+    $scope.data.sliderDelegate.slideNext();
+  }
+
+  // select this user
+  document.getElementById("yeah-btn").onclick = function(){$scope.lookDetail();}
+  $scope.lookDetail = function(){
+    var tmpAvatarString = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName("item-image")[0].getAttribute("style");
+    redirectAvatar = tmpAvatarString.substring(tmpAvatarString.indexOf("('")+2,tmpAvatarString.indexOf("')"));
+    redirectName = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h2')[0].innerText;
+    redirectHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
+    redirectDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
+    //window.location.href = redirectURL;
+    $state.go('details');
+  }
+});
+
+nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
+  $scope.goBack = function(){
+    $ionicHistory.goBack();
+  }
+  document.getElementById("nope-detail-btn").onclick = function() {
+    $ionicHistory.goBack();
+  }
+  document.getElementById("yeah-detail-btn").onclick = function() {
+    alert("invitation sent! :)");
+  }
+  $scope.personDetail = {
+    pictureUrl: redirectAvatar,
+    name: redirectName,
+    headline: redirectHeadLine,
+    distance: redirectDistance
+  }
 });

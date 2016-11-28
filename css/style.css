@@ -115,6 +115,12 @@
 ion-slides {
     height: 33em;
 }
+ion-slide-box {
+    height: 33em;
+}
+box {
+    height: 30em;
+}
 .swiper-pagination {
     display: none;
 }
@@ -165,8 +171,15 @@ ion-slides {
     height: 70px;
 }
 
-.IN-widget a {
-
-    vertical-align: middle;
-    padding-top: 10px!important;
+#detail-content .avatar {
+    max-width: 100%;
+}
+#detail-content h2, #detail-content h3, #detail-content p {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+#detail-content .bottomBtns {
+    width: 100%;
+    position: relative;
 }
