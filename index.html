@@ -25,7 +25,7 @@
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <!-- fetch polyfill, jquery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.1/fetch.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.1/fetch.min.js"></script>-->
     <script
       src="https://code.jquery.com/jquery-2.2.4.min.js"
       integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
@@ -40,45 +40,10 @@
 
     <!-- LinkedIn login API -->
     <!--<script type="text/javascript" src="//platform.linkedin.com/in.js">
-      api_key:   86sihvozktwsvb
+      api_key:   81xcrsa3u39vr4
       onLoad:    onLinkedInLoad
       authorize: true
       lang:      en_US
-    </script>
-    <script>
-      function onLinkedInLoad() {
-        // debugger;
-        IN.Event.on(IN, "auth", getProfileData);
-        var timeloop = setInterval(function(){
-          //console.log('listening');
-          if(!IN.User.isAuthorized()){
-            IN.User.refresh();
-            return;
-          }
-          clearInterval(timeloop);
-        }, 5000);
-      }
-      function getProfileData() {
-        IN.API.Profile("me").result(ShowProfileData).error(displayError);
-      }
-      function displayError(error) {
-        console.log(error);
-        alert(error);
-      }
-      function ShowProfileData(profiles) {
-        var member = profiles.values[0];
-        var id=member.id;
-        var firstName=member.firstName; 
-        var lastName=member.lastName; 
-        var photo=member.pictureUrl; 
-        var headline=member.headline; 
-        
-        if(IN.User.isAuthorized()) {
-          console.log(firstName);
-          document.getElementById("signinbtn").click(); // Click on the signinbtn
-          document.getElementById("avatar").src = photo;
-        }
-      }
     </script>-->
   </head>
   <body ng-app="starter">

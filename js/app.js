@@ -5,6 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
+var REDIRECT_URL = 'http://localhost:8000';
+var CLIENT_ID = '81xcrsa3u39vr4';
+var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
+var TOKEN_STATE = 'lynking123';
+var SERVER_URL = 'http://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
 
 nameApp.run(function() {
     if(window.StatusBar) {
@@ -40,9 +45,63 @@ nameApp.config(function($stateProvider, $urlRouterProvider) {
 
 nameApp.controller('IndexCtrl', function($scope, $state) {
   $scope.redirect = function(){
-    //location.href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=81xcrsa3u39vr4&redirect_uri=https%3A%2F%2Flynking.github.io&state=lynking123"
-    location.href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=81xcrsa3u39vr4&redirect_uri=http%3A%2F%2Flocalhost%3A8000&state=lynking123"
+    var linkedAuthUrl = 'https://www.linkedin.com/oauth/v2/authorization?response_type=code';
+    linkedAuthUrl+= '&client_id='+CLIENT_ID;
+    linkedAuthUrl+= '&redirect_uri='+encodeURIComponent(REDIRECT_URL);
+    linkedAuthUrl+= '&state='+TOKEN_STATE;
+    location.href= linkedAuthUrl;
   };
+
+  /**
+   * get Token from linkedin
+   * 
+   * @param {object} params
+   * {
+   *     grant_type: 'authorization_code',
+   *     code: code,
+   *     redirect_uri: 'http://localhost:8000',
+   *     client_id: '81xcrsa3u39vr4',
+   *     client_secret: '2P3itf8w1G5kgnY9'
+   * }
+   * @returns
+   * {
+   *  access_token: '',
+   *  expires_in: 5184000
+   * }
+   */
+  function getToken(params) {
+    return $.ajax({
+      url: SERVER_URL+'/api/linkedin/token',
+      type: 'GET',
+      data: params
+    });
+  }
+
+  /**
+   * Get profile from server
+   * 
+   * @param {any} token
+   * @returns
+   * {
+   * "emailAddress": "shreks7@gmail.com",
+   * "firstName": "Shrey",
+   * "formattedName": "Shrey Malhotra",
+   * "headline": "Master's Student at Carnegie Mellon University",
+   * "industry": "Computer Software",
+   * "lastName": "Malhotra",
+   * "linkedinId": "LRYv4JCUeo",
+   * "numConnections": 500,
+   * "pictureUrl": "https://media.licdn.com/mpr/mprx/0_1js6_1Awg0ugyNqZL7bkcUpe7x8gDsqOQBbk9DgSg-DjDnZYQRQ3LU8IaKSqdnZBKBbkNw3mgLuZYw5q3nIWNHTDoLu4YwWgLnIX31gSx0jAYp4qL-RLw36D3f",
+   * "profileUrl": "https://www.linkedin.com/in/shreymalhotra",
+   * "location": [-122.0707008,37.3991423]
+   * }
+   */
+  function getProfile(token) {
+    return $.ajax({
+          url: SERVER_URL+'/api/linkedin/profile?token='+token,
+          type: 'POST'
+        });
+  }
 
   console.log(window.location.href);
   var currentURL = window.location.href;
@@ -53,21 +112,17 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
     var reqBody = {
           grant_type: 'authorization_code',
           code: code,
-          redirect_uri: 'http://localhost:8000',
-          client_id: '81xcrsa3u39vr4',
-          client_secret: '2P3itf8w1G5kgnY9'
+          redirect_uri: REDIRECT_URL,
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET
       };
-    $.ajax({
-      url: 'https://www.linkedin.com/oauth/v2/accessToken', 
-      type: 'POST',
-      data: JSON.stringify(reqBody),
-      success: function(data, textStatus, jqXHR) {
-        console.log(data.access_token);
-      },
-      error: function(jqXHR, textStatus, errorThrown){
-        console.log("get token fail")
-      }
+    getToken(reqBody)
+    .then(function(data){
+      return getProfile(data.access_token);
     })
+    .then(function(profile){
+      console.log('profile', profile);
+    });
   }
 
   $scope.changePage = function(){
@@ -96,7 +151,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   // fake data, get data from backend
   $http({
     method: 'GET',
-    url: 'http://lynking-node.us-west-1.elasticbeanstalk.com/api/user/Aroshi%20Handa/match'
+    url: SERVER_URL+'/api/user/Aroshi%20Handa/match'
   }).then(function successCallback(response) {
     // console.log(response);
     // console.log(response.data[0].name);
