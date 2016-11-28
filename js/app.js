@@ -128,6 +128,7 @@ nameApp.controller('IndexCtrl', function($scope, $state) {
     .then(function(profile){
       console.log('profile', profile);
       $state.go('search');
+      profile = profile;
       profilePictureUrl = profile.pictureUrl;
     });
   }
@@ -159,7 +160,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   // fake data, get data from backend
   $.ajax({
     method: 'GET',
-    url: SERVER_URL+'/api/user/Aroshi%20Handa/match'
+    url: SERVER_URL+'/api/user/'+profile.linkedinId+'/match'
   }).then(function successCallback(response) {
     // console.log(response);
     // console.log(response.data[0].name);
