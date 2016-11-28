@@ -136,6 +136,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
       var lati = crd.latitude;
       var longi = crd.longitude;
       var accu = crd.accuracy; // in meters
+      alert("relocatING...");
       console.log("success" + lati);
     }, function(err){
       console.warn('ERROR(' + err.code + '): ' + err.message);
