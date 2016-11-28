@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
-var REDIRECT_URL = 'http://www.lynking.us';//'http://www.lynking.us';
+var REDIRECT_URL = 'https://lynking.github.io';//'http://www.lynking.us';//'http://www.lynking.us';
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
