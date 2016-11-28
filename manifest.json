@@ -1,0 +1,11 @@
+{
+  "name": "LynKing",
+  "short_name": "LynKing",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "./img/favicon.jpg",
+    "sizes": "512x512",
+    "type": "image/jpg"
+  }]
+}

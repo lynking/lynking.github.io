@@ -1,0 +1,172 @@
+/* ken burn animation */
+@keyframes kenburns {
+    0% {
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    80% {
+        transform: scale3d(1, 1, 1) translate3d(-50px, 0px, 0px);
+        animation-timing-function: ease-in;
+        opacity: 1;
+    }
+    100% {
+        transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);
+        opacity: 0;
+    }
+}
+
+@keyframes smallAnimate {
+    0% {
+      opacity: 0.5;
+    }
+    5% {
+      opacity: 1;
+    }
+    80% {
+        transform: scale3d(1.3, 1.3, 1.3) translate3d(0px, 0px, 0px);
+        animation-timing-function: ease-in;
+        opacity: 1;
+    }
+    100% {
+        transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);
+        opacity: 0.5;
+    }
+}
+
+@keyframes bigAnimate {
+    0% {
+      opacity: 0.5;
+    }
+    5% {
+      opacity: 1;
+    }
+    80% {
+        transform: scale3d(1.7, 1.7, 1.7) translate3d(0px, 0px, 0px);
+        animation-timing-function: ease-in;
+        opacity: 1;
+    }
+    100% {
+        transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);
+        opacity: 0.5;
+    }
+}
+
+.button .icon:before, .button.icon:before, .button.icon-left:before, .button.icon-right:before {
+    font-size: 2.5em;
+}
+
+.button.button-calm {
+    background-color: #007ab6;
+}
+
+#imageContainer img {
+  animation: kenburns 8s infinite;
+}
+
+.ion-ios-arrow-back {
+    display: inline;
+    position: absolute;
+    margin-top: -0.7em; 
+    font-size: 0.9em;
+    color: #007ab6;
+    border: none;
+    background-color: transparent;
+}
+.candidates .ion-ios-arrow-back{
+    margin-top: 1.3em; 
+}
+.logo-title {
+    display: block;
+    width: 32%;
+    margin: 2em auto 2em;
+}
+
+.animateContent {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 50%;
+}
+.user-avatar {
+    display: block;
+    position: relative;
+    margin: 0 auto 0;
+    z-index: 3;
+    width: 60%;
+}
+.becomeBigger {
+    display: block;
+    position: relative;
+    margin: -65% auto 0;
+    z-index: 2;
+    width: 70%;
+    animation: smallAnimate 3s infinite;
+}
+.becomeBiggest {
+    display: block;
+    position: relative;
+    margin: -75% auto 0;
+    z-index: 1;
+    width: 80%;
+    animation: bigAnimate 3s infinite;
+}
+ion-slides {
+    height: 33em;
+}
+.swiper-pagination {
+    display: none;
+}
+.item-image {
+    height: 27em;
+    width: 100%;
+}
+.swiper-slide {
+    height: 70%;
+    padding: 0 10px;
+}
+.item-avatar {
+    padding-left: 22px!important;
+    padding-top: 14px;
+    width: 95%;
+    height: 110px;
+    background-color: rgba(0,174,239,0.84);
+    margin-top: -110px;
+    left: 2.5%;
+    border: none;
+}
+.item-avatar h2 {
+    color: white;
+    font-size: 2em;
+}
+.item-avatar h3 {
+    color: white;
+    font-size: 1em;
+}
+.item-avatar p {
+    color: white;
+    font-size: 0.8em;
+}
+
+.btn-group {
+    display: inline-block;
+    width: 23%;
+    height: 100px;
+    font-size: 0;
+    background-color: transparent;
+    border: none;
+    vertical-align: bottom;
+    margin: 10px 2% 0;
+}
+.lower-btn {
+    width: 16%;
+    margin: 0 2.2%;
+    height: 70px;
+}
+
+.IN-widget a {
+
+    vertical-align: middle;
+    padding-top: 10px!important;
+}
