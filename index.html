@@ -98,7 +98,7 @@
                   <div class="list card">
                     <div class="item item-image" style="background-image:url('{{person.pictureUrl}}'); background-size:cover; background-position: center"></div>
                     <div class="item item-avatar">
-                      <h2>{{person.name}}</h2>
+                      <h2>{{person.formattedName}}</h2>
                       <h3>{{person.headline}}</h3>
                       <p>{{person.distance}} meters away</p>
                       <span class="summary" style="visibility:hidden; width: 0; height: 0;">{{person.summary}}</span>
@@ -137,7 +137,7 @@
           <button class="button icon ion-ios-arrow-back" ng-click="goBack()" ng-mobile-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
           <img class="avatar" ng-src="{{personDetail.pictureUrl}}" alt="User Avatar">
-          <h2>{{personDetail.firstName}} {{personDetail.lastName}}</h2>
+          <h2>{{personDetail.formattedName}}</h2>
           <h3>{{personDetail.headline}}</h3>
           <p>{{personDetail.distance}}</p>
           <p>{{personDetail.summary}}</p>

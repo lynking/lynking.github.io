@@ -278,7 +278,7 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
   }
   $scope.personDetail = {
     pictureUrl: redirectAvatar,
-    name: redirectName,
+    formattedName: redirectName,
     headline: redirectHeadLine,
     distance: redirectDistance,
     summary: redirectSummary
