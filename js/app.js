@@ -261,6 +261,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     redirectHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
     redirectDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
     redirectSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerHTML;
+    redirectLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
     //window.location.href = redirectURL;
     $state.go('details');
   }
@@ -273,14 +274,25 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
   document.getElementById("nope-detail-btn").onclick = function() {
     $ionicHistory.goBack();
   }
-  document.getElementById("yeah-detail-btn").onclick = function() {
-    alert("invitation sent! :)");
-  }
+
+  // fill detailed page with person information
   $scope.personDetail = {
     pictureUrl: redirectAvatar,
     formattedName: redirectName,
     headline: redirectHeadLine,
     distance: redirectDistance,
     summary: redirectSummary
+  }
+
+  // send invitation
+  document.getElementById("yeah-detail-btn").onclick = function() {
+    $.ajax({
+      method: 'POST',
+      url: SERVER_URL+'/api/user/'+profileLinkedinId+'/friends/'+redirectLinkedinId
+    }).then(function successCallback(response) {
+      alert("invitation sent! :)");
+    }, function errorCallback(response) {
+      alert("Something goes wrong :( try again later!");
+    });
   }
 });

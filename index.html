@@ -34,17 +34,20 @@
     <!-- your app's js -->
     <script src="js/app.js"></script>
 
-
-
-    <!-- jquery -->
-
-    <!-- LinkedIn login API -->
-    <!--<script type="text/javascript" src="//platform.linkedin.com/in.js">
-      api_key:   81xcrsa3u39vr4
-      onLoad:    onLinkedInLoad
-      authorize: true
-      lang:      en_US
-    </script>-->
+    <!-- get invitation request! -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io('https://4113studio.com');
+      socket.on('notifications', function (data) {
+        console.log(data);
+        // {
+        //   sender: '-AXeEda4CL',  // linkedinId
+        //   receiver: 'NiMjtTCXCQ', // linkedinId
+        //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
+        // }
+        socket.emit('client notification', { my: 'data' });
+      });
+    </script>
   </head>
   <body ng-app="starter">
     <div style="display: none">
@@ -102,6 +105,7 @@
                       <h3>{{person.headline}}</h3>
                       <p>{{person.distance}} meters away</p>
                       <span class="summary" style="visibility:hidden; width: 0; height: 0;">{{person.summary}}</span>
+                      <span class="uid" style="visibility:hidden; width: 0; height: 0;">{{person.linkedinId}}</span>
                     </div>
                   </div>
                 </a>
