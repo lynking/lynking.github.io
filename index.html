@@ -36,18 +36,7 @@
 
     <!-- get invitation request! -->
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script>
-      var socket = io('https://4113studio.com');
-      socket.on('notifications', function (data) {
-        console.log(data);
-        // {
-        //   sender: '-AXeEda4CL',  // linkedinId
-        //   receiver: 'NiMjtTCXCQ', // linkedinId
-        //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
-        // }
-        socket.emit('client notification', { my: 'data' });
-      });
-    </script>
+    <script src="js/notify.js"></script>
   </head>
   <body ng-app="starter">
     <div style="display: none">
