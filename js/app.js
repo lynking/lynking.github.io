@@ -14,19 +14,19 @@ var SERVER_URL = 'https://4113studio.com';//'https://lynking-node.us-west-1.elas
 var socket = io(SERVER_URL);
 
 socket.on('notification', function (data) {
-    console.log(data);
-    // {
-    //   sender: '-AXeEda4CL',  // linkedinId
-    //   receiver: 'NiMjtTCXCQ', // linkedinId
-    //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
-    // }
-    socket.emit('client notification', { my: 'data' });
-    // if (data.receiver == profileLinkedinId)
-    // update chat button
-    document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage="url('../img/chat-new.png')";
+  console.log(data);
+  // {
+  //   sender: '-AXeEda4CL',  // linkedinId
+  //   receiver: 'NiMjtTCXCQ', // linkedinId
+  //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
+  // }
+  socket.emit('client notification', { my: 'data' });
+  // if (data.receiver == profileLinkedinId)
+  // update chat button
+  document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage = "url('../img/chat-new.png')";
 });
 
-nameApp.factory('sharedData', function() {
+nameApp.factory('sharedData', function () {
   return {
     profile: {
       // emailAddress: '',
@@ -62,15 +62,28 @@ var friends = [];
 var pending = [];
 
 nameApp.directive("ngMobileClick", [function () {
-    return function (scope, elem, attrs) {
-        elem.bind("touchstart click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+  return function (scope, elem, attrs) {
+    elem.bind("touchstart click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-            scope.$apply(attrs["ngMobileClick"]);
+      scope.$apply(attrs["ngMobileClick"]);
+    });
+  }
+}]);
+
+nameApp.directive('ngKeyEnter', function () {
+  return function (scope, element, attrs) {
+    element.bind("keyup", function (event) {
+      if (event.which === 13) {
+        scope.$apply(function () {
+          scope.$eval(attrs.myEnter);
         });
-    }
-}])
+        event.preventDefault();
+      }
+    });
+  };
+});
 /**
  * get Token from linkedin
  * 
@@ -90,7 +103,7 @@ nameApp.directive("ngMobileClick", [function () {
  */
 function getToken(params) {
   return $.ajax({
-    url: SERVER_URL+'/api/linkedin/token',
+    url: SERVER_URL + '/api/linkedin/token',
     type: 'GET',
     data: params
   });
@@ -117,9 +130,9 @@ function getToken(params) {
  */
 function getProfile(token) {
   return $.ajax({
-        url: SERVER_URL+'/api/linkedin/profile?token='+token,
-        type: 'POST'
-      });
+    url: SERVER_URL + '/api/linkedin/profile?token=' + token,
+    type: 'POST'
+  });
 }
 
 /**
@@ -132,7 +145,7 @@ function getProfile(token) {
  */
 function addLocation(linkedinId, lat, lng) {
   return $.ajax({
-    url: SERVER_URL + '/api/user/'+linkedinId+'/location',
+    url: SERVER_URL + '/api/user/' + linkedinId + '/location',
     type: 'POST',
     data: {
       lat: lat,
@@ -150,18 +163,18 @@ function addLocation(linkedinId, lat, lng) {
  * @returns
  */
 function getLocation(success, fail) {
-  navigator.geolocation.getCurrentPosition(function(pos){
+  navigator.geolocation.getCurrentPosition(function (pos) {
     var crd = pos.coords;
     var lati = crd.latitude;
     var longi = crd.longitude;
     var accu = crd.accuracy; // in meters
     // alert("relocatING...");
     addLocation(profileLinkedinId, lati, longi)
-    .then(function(res){
-      console.log('Location updated');
-      success && success({lat: lati, lng: longi}, res);
-    });
-  }, function(err){
+      .then(function (res) {
+        console.log('Location updated');
+        success && success({ lat: lati, lng: longi }, res);
+      });
+  }, function (err) {
     fail && fail(err);
     console.warn('ERROR(' + err.code + '): ' + err.message);
   });
@@ -176,19 +189,19 @@ function getLocation(success, fail) {
  */
 function sendInivation(senderLinkedinId, receiverLinkedinId) {
   $.ajax({
-      method: 'POST',
-      url: SERVER_URL+'/api/user/'+senderLinkedinId+'/friends/'+receiverLinkedinId
-    }).then(function successCallback(response) {
-      alert("invitation sent! :)");
-    }, function errorCallback(response) {
-      if (response.responseJSON.errorMessage == "A pending request already exists") {
-        alert("invitation pending for confirmation :)");
-      } else if (response.responseJSON.errorMessage == "Requester and requested are already friends") {
-        alert("You are already connected! :)");
-      } else {
-        alert("Something goes wrong :( try again later!");
-      }
-    });
+    method: 'POST',
+    url: SERVER_URL + '/api/user/' + senderLinkedinId + '/friends/' + receiverLinkedinId
+  }).then(function successCallback(response) {
+    alert("invitation sent! :)");
+  }, function errorCallback(response) {
+    if (response.responseJSON.errorMessage == "A pending request already exists") {
+      alert("invitation pending for confirmation :)");
+    } else if (response.responseJSON.errorMessage == "Requester and requested are already friends") {
+      alert("You are already connected! :)");
+    } else {
+      alert("Something goes wrong :( try again later!");
+    }
+  });
 }
 
 /**
@@ -198,12 +211,12 @@ function sendInivation(senderLinkedinId, receiverLinkedinId) {
 function getPendingAndFriends(linkedinId, callback) {
   $.ajax({
     method: 'GET',
-    url: SERVER_URL+'/api/user/'+linkedinId+'/friends/requests'
+    url: SERVER_URL + '/api/user/' + linkedinId + '/friends/requests'
   }).then(function successCallback(response) {
     pending = response.received;
     $.ajax({
       method: 'GET',
-      url: SERVER_URL+'/api/user/'+linkedinId+'/friends'
+      url: SERVER_URL + '/api/user/' + linkedinId + '/friends'
     }).then(function successCallback(response) {
       friends = response.friends;
       callback();
@@ -212,17 +225,17 @@ function getPendingAndFriends(linkedinId, callback) {
 }
 
 
-nameApp.run(function() {
-    if(window.StatusBar) {
-      // StatusBar.overlaysWebView(true);
-      // StatusBar.styleLightContent();
-      StatusBar.styleBlackTranslucent();
-      // StatusBar.styleBlackOpaque();
-    }
+nameApp.run(function () {
+  if (window.StatusBar) {
+    // StatusBar.overlaysWebView(true);
+    // StatusBar.styleLightContent();
+    StatusBar.styleBlackTranslucent();
+    // StatusBar.styleBlackOpaque();
+  }
 });
 
-nameApp.config(function($stateProvider, $urlRouterProvider) {
- 
+nameApp.config(function ($stateProvider, $urlRouterProvider) {
+
   $stateProvider
     .state('index', {
       url: '/',
@@ -254,89 +267,89 @@ nameApp.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'chatList.html',
       controller: 'ChatListCtrl'
     });
- 
+
   $urlRouterProvider.otherwise("/");
 
 });
 
-nameApp.controller('IndexCtrl', function($scope, $state, sharedData) {
-  $scope.redirect = function(){
+nameApp.controller('IndexCtrl', function ($scope, $state, sharedData) {
+  $scope.redirect = function () {
     var linkedAuthUrl = 'https://www.linkedin.com/oauth/v2/authorization?response_type=code';
-    linkedAuthUrl+= '&client_id='+CLIENT_ID;
-    linkedAuthUrl+= '&redirect_uri='+encodeURIComponent(REDIRECT_URL);
-    linkedAuthUrl+= '&state='+TOKEN_STATE;
-    location.href= linkedAuthUrl;
+    linkedAuthUrl += '&client_id=' + CLIENT_ID;
+    linkedAuthUrl += '&redirect_uri=' + encodeURIComponent(REDIRECT_URL);
+    linkedAuthUrl += '&state=' + TOKEN_STATE;
+    location.href = linkedAuthUrl;
   };
 
   console.log(window.location.href);
   var currentURL = window.location.href;
-  if(currentURL.indexOf("code") > -1) {
+  if (currentURL.indexOf("code") > -1) {
     var start = currentURL.indexOf("code");
     var end = currentURL.indexOf("state");
-    var code = currentURL.substring(start+5, end-1);
+    var code = currentURL.substring(start + 5, end - 1);
     var reqBody = {
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: REDIRECT_URL,
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET
-      };
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: REDIRECT_URL,
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET
+    };
     getToken(reqBody)
-    .then(function(data){
-      return getProfile(data.access_token);
-    })
-    .then(function(profile){
-      console.log('profile', profile);
-      $state.go('search');
-      profileLinkedinId = profile.linkedinId;
-      profilePictureUrl = profile.pictureUrl;
-      profileName = profile.formattedName;
-      sharedData.profile = profile;
-    });
+      .then(function (data) {
+        return getProfile(data.access_token);
+      })
+      .then(function (profile) {
+        console.log('profile', profile);
+        $state.go('search');
+        profileLinkedinId = profile.linkedinId;
+        profilePictureUrl = profile.pictureUrl;
+        profileName = profile.formattedName;
+        sharedData.profile = profile;
+      });
   }
 
-  $scope.changePage = function(){
+  $scope.changePage = function () {
     $state.go('search');
   }
-  
+
 });
- 
-nameApp.controller('SearchCtrl', function($scope, $state, $ionicHistory) {
-  $scope.goBack = function(){
+
+nameApp.controller('SearchCtrl', function ($scope, $state, $ionicHistory) {
+  $scope.goBack = function () {
     $ionicHistory.goBack();
   }
   document.getElementById("avatar").setAttribute("src", profilePictureUrl);
 
-  getLocation(function(){
-      console.info('location updated');
-      $state.go('candidates');
-    }, function(){
-      var needRefresh = confirm('Failed to get Location, Want to refresh ?');
-      if(needRefresh) {
-        location.reload();
-      }
-      console.error('location error');
-    });
+  getLocation(function () {
+    console.info('location updated');
+    $state.go('candidates');
+  }, function () {
+    var needRefresh = confirm('Failed to get Location, Want to refresh ?');
+    if (needRefresh) {
+      location.reload();
+    }
+    console.error('location error');
+  });
 });
 
-nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate, sharedData) {
-  $scope.goBack = function(){
+nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate, sharedData) {
+  $scope.goBack = function () {
     $ionicHistory.goBack();
   }
-  $scope.go = function(path) { 
-    $location.path( path );
+  $scope.go = function (path) {
+    $location.path(path);
   }
 
   var curProfile = sharedData.profile;
 
-  if(!curProfile.linkedinId) {
+  if (!curProfile.linkedinId) {
     alert('Need login');
     $state.go('index');
     return;
   }
 
-  $scope.jumpToChatList = function(){
-    getPendingAndFriends(profileLinkedinId, function(){
+  $scope.jumpToChatList = function () {
+    getPendingAndFriends(profileLinkedinId, function () {
       $state.go('chatList');
     });
   };
@@ -344,7 +357,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   // fake data, get data from backend
   $.ajax({
     method: 'GET',
-    url: SERVER_URL+'/api/user/'+curProfile.linkedinId+'/match?distance=1500'
+    url: SERVER_URL + '/api/user/' + curProfile.linkedinId + '/match?distance=1500'
   }).then(function successCallback(response) {
     // console.log(response);
     // console.log(response.data[0].name);
@@ -355,14 +368,14 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   }, function errorCallback(response) {
     console.log("data not get");
   });
-  
+
   // refresh position
-  document.getElementById("posi-btn").onclick = function() {
-    getLocation(function(){
+  document.getElementById("posi-btn").onclick = function () {
+    getLocation(function () {
       console.info('location updated');
       alert("location updated!");
       // location.reload();
-    }, function(){
+    }, function () {
       console.error('location error');
     });
   }
@@ -370,7 +383,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   // next user
   $scope.data = {};
   $scope.data.currentPage = 0;
-  var setupSlider = function() {
+  var setupSlider = function () {
     //some options to pass to our slider
     $scope.data.sliderOptions = {
       initialSlide: 0,
@@ -380,17 +393,17 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     };
   }
   setupSlider();
-  document.getElementById("nope-btn").onclick = function() {
+  document.getElementById("nope-btn").onclick = function () {
     $scope.data.sliderDelegate.slideNext();
   }
 
   // select this user
   // document.getElementById("yeah-btn").onclick = function(){$scope.lookDetail();}
-  document.getElementById("yeah-btn").onclick = function() {
+  document.getElementById("yeah-btn").onclick = function () {
     receiverLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
     sendInivation(profileLinkedinId, receiverLinkedinId);
   }
-  $scope.lookDetail = function(index){
+  $scope.lookDetail = function (index) {
     sharedData.friend = sharedData.matchedList[index];
     // var tmpAvatarString = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName("item-image")[0].getAttribute("style");
     // receiverAvatar = tmpAvatarString.substring(tmpAvatarString.indexOf("('")+2,tmpAvatarString.indexOf("')"));
@@ -404,12 +417,12 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   }
 });
 
-nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory, sharedData) {
-  $scope.goBack = function(){
+nameApp.controller('DetailsCtrl', function ($scope, $state, $ionicHistory, sharedData) {
+  $scope.goBack = function () {
     $ionicHistory.goBack();
   }
-  $scope.jumpToChatList = function(){
-    getPendingAndFriends(profileLinkedinId, function(){
+  $scope.jumpToChatList = function () {
+    getPendingAndFriends(profileLinkedinId, function () {
       $state.go('chatList');
     })
   }
@@ -429,14 +442,14 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory, shared
   $scope.personDetail = friend;
 
   // send invitation
-  document.getElementById("yeah-detail-btn").onclick = function(){sendInivation(profileLinkedinId, receiverLinkedinId);}
+  document.getElementById("yeah-detail-btn").onclick = function () { sendInivation(profileLinkedinId, receiverLinkedinId); }
 });
 
-nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, sharedData) {
-  $scope.goBack = function(){
+nameApp.controller('ChatListCtrl', function ($scope, $state, $ionicHistory, sharedData) {
+  $scope.goBack = function () {
     $ionicHistory.goBack();
   }
-  
+
   var profile = sharedData.profile;
   var friend = sharedData.friend;
   // pendingList and fiendList data
@@ -444,13 +457,13 @@ nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, share
   $scope.friendsList = friends;
 
   // accept friend request
-  $scope.acceptReq = function($event){
+  $scope.acceptReq = function ($event) {
     var btns = angular.element($event.target).parent()[0]; // btns
     var friendLinkedinId = btns.parentElement.getElementsByClassName("linkedinId")[0].innerHTML; // friend linkedin id
     // post req
     $.ajax({
       method: 'PUT',
-      url: SERVER_URL+'/api/user/'+profile.linkedinId+'/friends/'+friend.linkedinId,
+      url: SERVER_URL + '/api/user/' + profile.linkedinId + '/friends/' + friend.linkedinId,
       data: {
         action: "accept"
       }
@@ -460,17 +473,17 @@ nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, share
       btns.getElementsByClassName("gochat-btn")[0].style.display = 'block'; // show gochat btn
     }, function errorCallback(response) {
       alert("please try again later");
-    });    
+    });
   }
 
   // decline friend request
-  $scope.rejectReq = function($event){
+  $scope.rejectReq = function ($event) {
     var listItem = angular.element($event.target).parent()[0].parentElement; // current list item
     var friendLinkedinId = listItem.getElementsByClassName("linkedinId")[0].innerHTML; // friend linkedin id
     // post req
     $.ajax({
       method: 'PUT',
-      url: SERVER_URL+'/api/user/'+profileLinkedinId+'/friends/'+friendLinkedinId,
+      url: SERVER_URL + '/api/user/' + profileLinkedinId + '/friends/' + friendLinkedinId,
       data: {
         action: "deny"
       }
@@ -482,7 +495,7 @@ nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, share
   }
 
   // go to chat!
-  $scope.goChat = function($event) {
+  $scope.goChat = function ($event) {
     $state.go('chat', {
       linkedinId: profile.linkedinId,
       friendLinkedinId: friend.linkedinId
@@ -490,11 +503,11 @@ nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, share
   }
 });
 
-nameApp.controller('ChatCtrl', function($scope, $state, $ionicHistory, sharedData) {
+nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedData) {
   var uid = $state.params.linkedinId;
   var friendId = $state.params.friendLinkedinId;
 
-  if(!firebase.apps.length) {
+  if (!firebase.apps.length) {
     // Initialize Firebase
     var config = {
       apiKey: "AIzaSyBst2CUBQYUJZZ8eEg-KhcgSi8L_P6tJVs",
@@ -508,31 +521,31 @@ nameApp.controller('ChatCtrl', function($scope, $state, $ionicHistory, sharedDat
     // inital auth
     $.ajax({
       method: 'POST',
-      url: SERVER_URL +'/api/user/'+uid+'/chatToken'
+      url: SERVER_URL + '/api/user/' + uid + '/chatToken'
     })
-    .then(function (res) {
-      $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken);
+      .then(function (res) {
+        $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken);
 
-      var dbRef = firebase.database().ref('chats/'+uid+'/'+friendId);
-      var dbRefCopy = firebase.database().ref('chats/'+friendId+'/'+uid);
+        var dbRef = firebase.database().ref('chats/' + uid + '/' + friendId);
+        var dbRefCopy = firebase.database().ref('chats/' + friendId + '/' + uid);
 
-      dbRef.off();
+        dbRef.off();
 
-      dbRef.limitToLast(12).on('child_added', refreshMessage);
-      // dbRefCopy.limitToLast(12).on('child_added', refreshMessage);
+        dbRef.limitToLast(12).on('child_added', refreshMessage);
+        // dbRefCopy.limitToLast(12).on('child_added', refreshMessage);
 
-      $scope.dbRef = dbRef;
-      $scope.dbRefCopy = dbRefCopy;
+        $scope.dbRef = dbRef;
+        $scope.dbRefCopy = dbRefCopy;
 
-    })
-    .fail(function(err) {
-      alert(err.responseJSON.errorMessage);
-    });
+      })
+      .fail(function (err) {
+        alert(err.responseJSON.errorMessage);
+      });
 
     // methods
-    $scope.sendMessage = function() {
+    $scope.sendMessage = function () {
       var text = $scope.input.text;
-      if(text === null || text === '') {
+      if (text === null || text === '') {
         return;
       }
 
@@ -549,14 +562,16 @@ nameApp.controller('ChatCtrl', function($scope, $state, $ionicHistory, sharedDat
 
       $scope.dbRef.push(message);
       $scope.dbRefCopy.push(message);
+
+      $scope.input.text = '';
     }
   }
 
   // refresh view message
   function refreshMessage(data) {
-      var val = data.val();
-      $scope.messages.push(val);
-      $scope.$apply();
+    var val = data.val();
+    $scope.messages.push(val);
+    $scope.$apply();
   }
 
   $scope.messages = [];
