@@ -508,7 +508,7 @@ nameApp.controller('ChatCtrl', function($scope, $state, $ionicHistory, sharedDat
     // inital auth
     $.ajax({
       method: 'POST',
-      url: 'http://localhost:8080'+'/api/user/'+uid+'/chatToken'
+      url: SERVER_URL +'/api/user/'+uid+'/chatToken'
     })
     .then(function (res) {
       $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken.chatToken);
