@@ -374,7 +374,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
     receiverLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
     sendInivation(profileLinkedinId, receiverLinkedinId);
   }
-  $scope.lookDetail = function(){
+  $scope.lookDetail = function(index){
     sharedData.friend = sharedData.matchedList[index];
     // var tmpAvatarString = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName("item-image")[0].getAttribute("style");
     // receiverAvatar = tmpAvatarString.substring(tmpAvatarString.indexOf("('")+2,tmpAvatarString.indexOf("')"));
