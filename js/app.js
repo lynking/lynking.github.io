@@ -415,6 +415,7 @@ nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHist
     // receiverSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerHTML;
     // receiverLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
     //window.location.href = redirectURL;
+    receiverLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
     $state.go('details');
   }
 });
