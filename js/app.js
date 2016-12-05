@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
-var REDIRECT_URL = 'http://localhost:8000';//'https://lynking.github.io';//http://www.lynking.us';
+var REDIRECT_URL = 'https://lynking.github.io';//'http://localhost:8000';//http://www.lynking.us';
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
@@ -20,6 +20,11 @@ var receiverHeadLine = "";
 var receiverDistance = "";
 var receiverSummary = "";
 var receiverLinkedinId = "";
+
+// friends & pending list
+var friends = [];
+var pending = [];
+
 
 nameApp.directive("ngMobileClick", [function () {
     return function (scope, elem, attrs) {
@@ -101,6 +106,14 @@ function addLocation(linkedinId, lat, lng) {
   });
 }
 
+/**
+ * get user's location
+ * 
+ * @param {string} linkedinId
+ * @param {number} lat
+ * @param {number} lng
+ * @returns
+ */
 function getLocation(success, fail) {
   navigator.geolocation.getCurrentPosition(function(pos){
     var crd = pos.coords;
@@ -141,6 +154,27 @@ function sendInivation(senderLinkedinId, receiverLinkedinId) {
     });
 }
 
+/**
+ * get pendings & friends, then jump to list
+ * @return 
+ */
+function getPendingAndFriends(linkedinId, callback) {
+  $.ajax({
+    method: 'GET',
+    url: SERVER_URL+'/api/user/'+linkedinId+'/friends/requests'
+  }).then(function successCallback(response) {
+    pending = response.received;
+    $.ajax({
+      method: 'GET',
+      url: SERVER_URL+'/api/user/'+linkedinId+'/friends'
+    }).then(function successCallback(response) {
+      friends = response;
+      callback();
+    })
+  })
+}
+
+
 nameApp.run(function() {
     if(window.StatusBar) {
       // StatusBar.overlaysWebView(true);
@@ -172,6 +206,11 @@ nameApp.config(function($stateProvider, $urlRouterProvider) {
       url: '/details',
       templateUrl: 'details.html',
       controller: 'DetailsCtrl'
+    })
+    .state('chatList', {
+      url: '/chatList',
+      templateUrl: 'chatList.html',
+      controller: 'ChatListCtrl'
     });
  
   $urlRouterProvider.otherwise("/");
@@ -243,6 +282,11 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   $scope.go = function(path) { 
     $location.path( path );
   }
+  $scope.jumpToChatList = function(){
+    getPendingAndFriends(profileLinkedinId, function(){
+      $state.go('chatList');
+    })
+  }
   // fake data, get data from backend
   $.ajax({
     method: 'GET',
@@ -250,7 +294,7 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   }).then(function successCallback(response) {
     // console.log(response);
     // console.log(response.data[0].name);
-    console.log(response.users);
+    // console.log(response.users);
     $scope.personsList = response.users;
   }, function errorCallback(response) {
     console.log("data not get");
@@ -307,9 +351,11 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
   $scope.goBack = function(){
     $ionicHistory.goBack();
   }
-  // document.getElementById("nope-detail-btn").onclick = function() {
-  //   $ionicHistory.goBack();
-  // }
+  $scope.jumpToChatList = function(){
+    getPendingAndFriends(profileLinkedinId, function(){
+      $state.go('chatList');
+    })
+  }
 
   // fill detailed page with person information
   $scope.personDetail = {
@@ -322,4 +368,52 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
 
   // send invitation
   document.getElementById("yeah-detail-btn").onclick = function(){sendInivation(profileLinkedinId, receiverLinkedinId);}
+});
+
+nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory) {
+  $scope.goBack = function(){
+    $ionicHistory.goBack();
+  }
+  
+  // pendingList and fiendList data
+  $scope.pendingList = pending;
+  $scope.friendsList = friends;
+
+  // accept friend request
+  $scope.acceptReq = function($event){
+    var btns = angular.element($event.target).parent()[0]; // btns
+    var friendLinkedinId = btns.parentElement.getElementsByClassName("linkedinId")[0].innerHTML; // friend linkedin id
+    // post req
+    $.ajax({
+      method: 'PUT',
+      url: SERVER_URL+'/api/user/'+profileLinkedinId+'/friends/'+friendLinkedinId,
+      data: {
+        action: "accept"
+      }
+    }).then(function successCallback(response) {
+      btns.getElementsByClassName("accept-btn")[0].style.display = 'none'; // hide accept btn
+      btns.getElementsByClassName("reject-btn")[0].style.display = 'none'; // hide reject btn
+      btns.getElementsByClassName("gochat-btn")[0].style.display = 'block'; // show gochat btn
+    }, function errorCallback(response) {
+      alert("please try again later");
+    });    
+  }
+
+  // decline friend request
+  $scope.rejectReq = function($event){
+    var listItem = angular.element($event.target).parent()[0].parentElement; // current list item
+    var friendLinkedinId = listItem.getElementsByClassName("linkedinId")[0].innerHTML; // friend linkedin id
+    // post req
+    $.ajax({
+      method: 'PUT',
+      url: SERVER_URL+'/api/user/'+profileLinkedinId+'/friends/'+friendLinkedinId,
+      data: {
+        action: "deny"
+      }
+    }).then(function successCallback(response) {
+      listItem.style.display = 'none'; // hide this item
+    }, function errorCallback(response) {
+      alert("please try again later");
+    });
+  }
 });
