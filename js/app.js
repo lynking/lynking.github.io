@@ -77,7 +77,7 @@ nameApp.directive('ngKeyEnter', function () {
     element.bind("keyup", function (event) {
       if (event.which === 13) {
         scope.$apply(function () {
-          scope.$eval(attrs.myEnter);
+          scope.$eval(attrs.ngKeyEnter);
         });
         event.preventDefault();
       }
@@ -536,7 +536,8 @@ nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedDa
 
         dbRef.off();
 
-        dbRef.limitToLast(12).on('child_added', refreshMessage);
+        // listen server to get message
+        dbRef.limitToLast(20).on('child_added', refreshMessage);
         // dbRefCopy.limitToLast(12).on('child_added', refreshMessage);
 
         $scope.dbRef = dbRef;
@@ -548,6 +549,13 @@ nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedDa
       });
 
     // methods
+    $scope.isCurProfile = function(linkedinId) {
+      return linkedinId === sharedData.profile.linkedinId;
+    }
+
+    /**
+     * send text to server (firebase)
+     */
     $scope.sendMessage = function () {
       var text = $scope.input.text;
       if (text === null || text === '') {

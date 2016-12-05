@@ -151,8 +151,9 @@
       <ion-view>
         <ion-content>
           <ul>
-            <li ng-repeat="message in messages track by $index">
-              {{message.name}} - {{message.text}}
+            <li ng-repeat="message in messages track by $index" ng-class="{'right': isCurProfile(message.linkedinId) }">
+              <img ng-src="message.photoUrl" alt="message.name">
+              <span>{{message.text}}</span>
             </li>
           </ul>
           <input type="text" name="send" ng-model="input.text" ng-key-enter="sendMessage(input.text)">
