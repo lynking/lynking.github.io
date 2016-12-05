@@ -1,0 +1,31 @@
+{
+  "name": "lynking.github.io",
+  "version": "1.0.0",
+  "description": "lynking web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lynking/lynking.github.io.git"
+  },
+  "author": "hectorguo,hurbert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lynking/lynking.github.io/issues"
+  },
+  "homepage": "https://github.com/lynking/lynking.github.io#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
+  "dependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-html-replace": "^1.6.2",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace-task": "^0.11.0",
+    "gulp-uglifyjs": "^0.6.2"
+  }
+}
