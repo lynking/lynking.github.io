@@ -149,15 +149,19 @@
 
     <script id="chat.html" type="text/ng-template">
       <ion-view>
-        <ion-content>
-          <ul>
-            <li ng-repeat="message in messages track by $index" ng-class="{'right': isCurProfile(message.linkedinId) }">
-              <img ng-src="message.photoUrl" alt="message.name">
-              <span>{{message.text}}</span>
+        <ion-content class="chat-container">
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back" style="margin-top:-3.7em"></button>
+          <ol class="chat">
+            <li ng-repeat="message in messages track by $index" ng-class="{true: 'self', false: 'other'}[message.linkedinId == curProfile.linkedinId]">
+              <div class="avatar"><img ng-src="{{message.photoUrl}}" alt="{{message.name}}" draggable="false"></div>
+              <div class="msg">
+                <p>{{message.text}}</p>
+                <time>{{message.timestamp | date:'HH:mm'}}</time>
+              </div>
             </li>
-          </ul>
-          <input type="text" name="send" ng-model="input.text" ng-key-enter="sendMessage(input.text)">
-          <button ng-click="sendMessage(input.text)">Send</button>
+          </ol>
+          <input type="text" name="send" ng-model="input.text" ng-key-enter="sendMessage(input.text)" class="chat-input" placeholder="Your message">
+          <button ng-click="sendMessage(input.text)" class="chat-btn">Send</button>
         </ion-content>
       </ion-view>
     </script>

@@ -512,6 +512,13 @@ nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedDa
   var uid = $state.params.linkedinId;
   var friendId = $state.params.friendLinkedinId;
 
+  // properties
+  $scope.messages = [];
+  $scope.input = {
+    text: ''
+  };
+  $scope.curProfile = sharedData.profile;
+
   if (!firebase.apps.length) {
     // Initialize Firebase
     var config = {
@@ -549,10 +556,9 @@ nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedDa
       });
 
     // methods
-    $scope.isCurProfile = function(linkedinId) {
-      return linkedinId === sharedData.profile.linkedinId;
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
     }
-
     /**
      * send text to server (firebase)
      */
@@ -586,12 +592,6 @@ nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedDa
     $scope.messages.push(val);
     $scope.$apply();
   }
-
-  $scope.messages = [];
-  $scope.input = {
-    text: ''
-  };
-
   // $scope. = $state;
   // debugger;
 });
