@@ -464,6 +464,15 @@ nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, share
       alert("please try again later");
     });
   }
+
+  // go to chat!
+  $scope.goChat = function($event) {
+    var friendLinkedinId = listItem.getElementsByClassName("linkedinId")[0].innerHTML; // friend linkedin 
+    $state.go('chat', {
+      linkedinId: profile.linkedinId,
+      friendLinkedinId: friend.linkedinId
+    });
+  }
 });
 
 nameApp.controller('ChatCtrl', function($scope, $state, $ionicHistory, sharedData) {

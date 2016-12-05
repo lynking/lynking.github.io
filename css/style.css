@@ -188,6 +188,12 @@ box {
     box-sizing: border-box;
     padding: 0 20px;
 }
+#detail-content h2 {
+    color: #0e76bc;
+}
+#detail-content h3 {
+    color: #757575;
+}
 #detail-content .bottomBtns {
     width: 100%;
     position: relative;
