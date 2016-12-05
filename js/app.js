@@ -11,6 +11,21 @@ var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
 var SERVER_URL = 'https://4113studio.com';//'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
 
+var socket = io(SERVER_URL);
+
+socket.on('notification', function (data) {
+    console.log(data);
+    // {
+    //   sender: '-AXeEda4CL',  // linkedinId
+    //   receiver: 'NiMjtTCXCQ', // linkedinId
+    //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
+    // }
+    socket.emit('client notification', { my: 'data' });
+    // if (data.receiver == profileLinkedinId)
+    // update chat button
+    document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage="url('../img/chat-new.png')";
+});
+
 nameApp.factory('sharedData', function() {
   return {
     profile: {
@@ -30,7 +45,8 @@ nameApp.factory('sharedData', function() {
     friend: {},
     matchedList: []
   }
-})
+});
+
 // glocal var
 var profileLinkedinId = "";
 var profilePictureUrl = "";
