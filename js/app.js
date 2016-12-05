@@ -467,7 +467,6 @@ nameApp.controller('ChatListCtrl', function($scope, $state, $ionicHistory, share
 
   // go to chat!
   $scope.goChat = function($event) {
-    var friendLinkedinId = listItem.getElementsByClassName("linkedinId")[0].innerHTML; // friend linkedin 
     $state.go('chat', {
       linkedinId: profile.linkedinId,
       friendLinkedinId: friend.linkedinId
