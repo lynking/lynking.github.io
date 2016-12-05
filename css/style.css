@@ -71,7 +71,7 @@ body, html {
 }
 
 .ion-ios-arrow-back {
-    display: inline;
+    display: inline-block;
     position: absolute;
     margin-top: -0.7em; 
     font-size: 0.9em;

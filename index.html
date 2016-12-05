@@ -22,6 +22,7 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <!-- =========================== Third party lib =================================== -->
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <!-- fetch polyfill, jquery -->
@@ -31,12 +32,12 @@
       integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
       crossorigin="anonymous"></script>
 
-    <!-- your app's js -->
-    <script src="js/app.js"></script>
-
     <!-- get invitation request! -->
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="js/notify.js"></script>
+    
+    <!--firebase for Chat-->
+    <script src="https://www.gstatic.com/firebasejs/3.0.4/firebase.js"></script>
+    
   </head>
   <body ng-app="starter">
     <div style="display: none">
@@ -86,7 +87,7 @@
           <ion-slides options="data.sliderOptions" slider="data.sliderDelegate">
             <ion-slide-page ng-repeat="person in personsList track by $index">
               <div class="box">
-                <a style="text-decoration:none;" ng-click="lookDetail()"> <!--ng-href="{{person.profileUrl}}"-->
+                <a style="text-decoration:none;" ng-click="lookDetail($index)"> <!--ng-href="{{person.profileUrl}}"-->
                   <div class="list card">
                     <div class="item item-image" style="background-image:url('{{person.pictureUrl}}'); background-size:cover; background-position: center"></div>
                     <div class="item item-avatar">
@@ -143,5 +144,23 @@
         </ion-content>
       </ion-view>
     </script>
+
+    <script id="chat.html" type="text/ng-template">
+      <ion-view>
+        <ion-content>
+          <ul>
+            <li ng-repeat="message in messages track by $index">
+              {{message.name}} - {{message.text}}
+            </li>
+          </ul>
+          <input type="text" name="send" ng-model="input.text">
+          <button ng-mobile-click="sendMessage(input.text)" ng-click="sendMessage(input.text)">Send</button>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/notify.js"></script>
   </body>
 </html>
