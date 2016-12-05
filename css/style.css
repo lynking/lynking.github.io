@@ -192,6 +192,9 @@ box {
     width: 100%;
     position: relative;
 }
+#detail-content .lower-btn {
+    width: 31%;
+}
 #detail-content .logo-title {
     margin-top: 24px;
     margin-bottom: 24px;

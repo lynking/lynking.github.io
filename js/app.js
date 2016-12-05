@@ -5,11 +5,21 @@
 // the 2nd parameter is an array of 'requires'
 
 var nameApp = angular.module('starter', ['ionic', 'ui.router']);
-var REDIRECT_URL = 'https://lynking.github.io';//http://www.lynking.us';//'http://www.lynking.us';
+var REDIRECT_URL = 'http://localhost:8000';//'https://lynking.github.io';//http://www.lynking.us';
 var CLIENT_ID = '81xcrsa3u39vr4';
 var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
 var SERVER_URL = 'https://4113studio.com';//'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
+
+// glocal var
+var profileLinkedinId = "";
+var profilePictureUrl = "";
+var receiverAvatar = "";
+var receiverName = "";
+var receiverHeadLine = "";
+var receiverDistance = "";
+var receiverSummary = "";
+var receiverLinkedinId = "";
 
 nameApp.directive("ngMobileClick", [function () {
     return function (scope, elem, attrs) {
@@ -22,92 +32,114 @@ nameApp.directive("ngMobileClick", [function () {
     }
 }])
 /**
-   * get Token from linkedin
-   * 
-   * @param {object} params
-   * {
-   *     grant_type: 'authorization_code',
-   *     code: code,
-   *     redirect_uri: 'http://localhost:8000',
-   *     client_id: '81xcrsa3u39vr4',
-   *     client_secret: '2P3itf8w1G5kgnY9'
-   * }
-   * @returns
-   * {
-   *  access_token: '',
-   *  expires_in: 5184000
-   * }
-   */
-  function getToken(params) {
-    return $.ajax({
-      url: SERVER_URL+'/api/linkedin/token',
-      type: 'GET',
-      data: params
+ * get Token from linkedin
+ * 
+ * @param {object} params
+ * {
+ *     grant_type: 'authorization_code',
+ *     code: code,
+ *     redirect_uri: 'http://localhost:8000',
+ *     client_id: '81xcrsa3u39vr4',
+ *     client_secret: '2P3itf8w1G5kgnY9'
+ * }
+ * @returns
+ * {
+ *  access_token: '',
+ *  expires_in: 5184000
+ * }
+ */
+function getToken(params) {
+  return $.ajax({
+    url: SERVER_URL+'/api/linkedin/token',
+    type: 'GET',
+    data: params
+  });
+}
+
+/**
+ * Get profile from server
+ * 
+ * @param {any} token
+ * @returns
+ * {
+ * "emailAddress": "shreks7@gmail.com",
+ * "firstName": "Shrey",
+ * "formattedName": "Shrey Malhotra",
+ * "headline": "Master's Student at Carnegie Mellon University",
+ * "industry": "Computer Software",
+ * "lastName": "Malhotra",
+ * "linkedinId": "LRYv4JCUeo",
+ * "numConnections": 500,
+ * "pictureUrl": "https://media.licdn.com/mpr/mprx/0_1js6_1Awg0ugyNqZL7bkcUpe7x8gDsqOQBbk9DgSg-DjDnZYQRQ3LU8IaKSqdnZBKBbkNw3mgLuZYw5q3nIWNHTDoLu4YwWgLnIX31gSx0jAYp4qL-RLw36D3f",
+ * "profileUrl": "https://www.linkedin.com/in/shreymalhotra",
+ * "location": [-122.0707008,37.3991423]
+ * }
+ */
+function getProfile(token) {
+  return $.ajax({
+        url: SERVER_URL+'/api/linkedin/profile?token='+token,
+        type: 'POST'
+      });
+}
+
+/**
+ * add user's location
+ * 
+ * @param {string} linkedinId
+ * @param {number} lat
+ * @param {number} lng
+ * @returns
+ */
+function addLocation(linkedinId, lat, lng) {
+  return $.ajax({
+    url: SERVER_URL + '/api/user/'+linkedinId+'/location',
+    type: 'POST',
+    data: {
+      lat: lat,
+      lng: lng
+    }
+  });
+}
+
+function getLocation(success, fail) {
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var crd = pos.coords;
+    var lati = crd.latitude;
+    var longi = crd.longitude;
+    var accu = crd.accuracy; // in meters
+    // alert("relocatING...");
+    addLocation(profileLinkedinId, lati, longi)
+    .then(function(res){
+      console.log('Location updated');
+      success && success({lat: lati, lng: longi}, res);
     });
-  }
+  }, function(err){
+    fail && fail(err);
+    console.warn('ERROR(' + err.code + '): ' + err.message);
+  });
+}
 
-  /**
-   * Get profile from server
-   * 
-   * @param {any} token
-   * @returns
-   * {
-   * "emailAddress": "shreks7@gmail.com",
-   * "firstName": "Shrey",
-   * "formattedName": "Shrey Malhotra",
-   * "headline": "Master's Student at Carnegie Mellon University",
-   * "industry": "Computer Software",
-   * "lastName": "Malhotra",
-   * "linkedinId": "LRYv4JCUeo",
-   * "numConnections": 500,
-   * "pictureUrl": "https://media.licdn.com/mpr/mprx/0_1js6_1Awg0ugyNqZL7bkcUpe7x8gDsqOQBbk9DgSg-DjDnZYQRQ3LU8IaKSqdnZBKBbkNw3mgLuZYw5q3nIWNHTDoLu4YwWgLnIX31gSx0jAYp4qL-RLw36D3f",
-   * "profileUrl": "https://www.linkedin.com/in/shreymalhotra",
-   * "location": [-122.0707008,37.3991423]
-   * }
-   */
-  function getProfile(token) {
-    return $.ajax({
-          url: SERVER_URL+'/api/linkedin/profile?token='+token,
-          type: 'POST'
-        });
-  }
-
-  /**
-   * add user's location
-   * 
-   * @param {string} linkedinId
-   * @param {number} lat
-   * @param {number} lng
-   * @returns
-   */
-  function addLocation(linkedinId, lat, lng) {
-    return $.ajax({
-      url: SERVER_URL + '/api/user/'+linkedinId+'/location',
-      type: 'POST',
-      data: {
-        lat: lat,
-        lng: lng
+/**
+ * send invitation
+ * 
+ * @param {String} senderLinkedinId
+ * @param {String} receiverLinkedinId
+ * @returns
+ */
+function sendInivation(senderLinkedinId, receiverLinkedinId) {
+  $.ajax({
+      method: 'POST',
+      url: SERVER_URL+'/api/user/'+senderLinkedinId+'/friends/'+receiverLinkedinId
+    }).then(function successCallback(response) {
+      alert("invitation sent! :)");
+    }, function errorCallback(response) {
+      if (response.responseJSON.errorMessage == "A pending request already exists") {
+        alert("invitation pending for confirmation :)");
+      } else {
+        alert("Something goes wrong :( try again later!");
       }
     });
-  }
-
-  function getLocation(success, fail) {
-    navigator.geolocation.getCurrentPosition(function(pos){
-      var crd = pos.coords;
-      var lati = crd.latitude;
-      var longi = crd.longitude;
-      var accu = crd.accuracy; // in meters
-      // alert("relocatING...");
-      addLocation(profileLinkedinId, lati, longi)
-      .then(function(res){
-        console.log('Location updated');
-        success && success({lat: lati, lng: longi}, res);
-      });
-    }, function(err){
-      fail && fail(err);
-      console.warn('ERROR(' + err.code + '): ' + err.message);
-    });
-  }
+}
 
 nameApp.run(function() {
     if(window.StatusBar) {
@@ -253,15 +285,19 @@ nameApp.controller('CandidatesCtrl', function($scope, $http, $state, $ionicHisto
   }
 
   // select this user
-  document.getElementById("yeah-btn").onclick = function(){$scope.lookDetail();}
+  // document.getElementById("yeah-btn").onclick = function(){$scope.lookDetail();}
+  document.getElementById("yeah-btn").onclick = function() {
+    receiverLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
+    sendInivation(profileLinkedinId, receiverLinkedinId);
+  }
   $scope.lookDetail = function(){
     var tmpAvatarString = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName("item-image")[0].getAttribute("style");
-    redirectAvatar = tmpAvatarString.substring(tmpAvatarString.indexOf("('")+2,tmpAvatarString.indexOf("')"));
-    redirectName = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h2')[0].innerText;
-    redirectHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
-    redirectDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
-    redirectSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerHTML;
-    redirectLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
+    receiverAvatar = tmpAvatarString.substring(tmpAvatarString.indexOf("('")+2,tmpAvatarString.indexOf("')"));
+    receiverName = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h2')[0].innerText;
+    receiverHeadLine = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('h3')[0].innerText;
+    receiverDistance = document.getElementsByClassName("swiper-slide-active")[0].getElementsByTagName('p')[0].innerText;
+    receiverSummary = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('summary')[0].innerHTML;
+    receiverLinkedinId = document.getElementsByClassName("swiper-slide-active")[0].getElementsByClassName('uid')[0].innerHTML;
     //window.location.href = redirectURL;
     $state.go('details');
   }
@@ -271,28 +307,19 @@ nameApp.controller('DetailsCtrl', function($scope, $state, $ionicHistory) {
   $scope.goBack = function(){
     $ionicHistory.goBack();
   }
-  document.getElementById("nope-detail-btn").onclick = function() {
-    $ionicHistory.goBack();
-  }
+  // document.getElementById("nope-detail-btn").onclick = function() {
+  //   $ionicHistory.goBack();
+  // }
 
   // fill detailed page with person information
   $scope.personDetail = {
-    pictureUrl: redirectAvatar,
-    formattedName: redirectName,
-    headline: redirectHeadLine,
-    distance: redirectDistance,
-    summary: redirectSummary
+    pictureUrl: receiverAvatar,
+    formattedName: receiverName,
+    headline: receiverHeadLine,
+    distance: receiverDistance,
+    summary: receiverSummary
   }
 
   // send invitation
-  document.getElementById("yeah-detail-btn").onclick = function() {
-    $.ajax({
-      method: 'POST',
-      url: SERVER_URL+'/api/user/'+profileLinkedinId+'/friends/'+redirectLinkedinId
-    }).then(function successCallback(response) {
-      alert("invitation sent! :)");
-    }, function errorCallback(response) {
-      alert("Something goes wrong :( try again later!");
-    });
-  }
+  document.getElementById("yeah-detail-btn").onclick = function(){sendInivation(profileLinkedinId, receiverLinkedinId);}
 });
