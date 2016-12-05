@@ -332,11 +332,12 @@ nameApp.controller('SearchCtrl', function ($scope, $state, $ionicHistory) {
   });
 });
 
-nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate, sharedData) {
+nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHistory, $ionicSlideBoxDelegate, sharedData, $ionicViewSwitcher) {
   $scope.goBack = function () {
     $ionicHistory.goBack();
   }
   $scope.goBackToHome = function() {
+    $ionicViewSwitcher.nextDirection('back');
     $state.go('index');
   }
   $scope.go = function (path) {
@@ -347,6 +348,7 @@ nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHist
 
   if (!curProfile.linkedinId) {
     alert('Need login');
+    $ionicViewSwitcher.nextDirection('back');
     $state.go('index');
     return;
   }
