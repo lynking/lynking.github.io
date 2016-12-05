@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon-precomposed" href="./img/favicon.jpg">
     <link rel="manifest" href="manifest.json">
     
-    <title>LynKing-Build your network here and now</title>
+    <title>Lynking-Build your network here and now</title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -83,6 +83,7 @@
         <ion-content class="padding candidates">
           <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
+          <button class="button chat-list-btn" ng-click="jumpToChatList()" ng-mobile-click="jumpToChatList()"></button>
           <!--<ion-slides  options="options" slider="data.slider">-->
           <ion-slides options="data.sliderOptions" slider="data.sliderDelegate">
             <ion-slide-page ng-repeat="person in personsList track by $index">
@@ -128,8 +129,9 @@
     <script id="details.html" type="text/ng-template">
       <ion-view>
         <ion-content class="details" id="detail-content">
-          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" ng-mobile-click="goBack()" nav-direction="back"></button>
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
           <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
+          <button class="button chat-list-btn" ng-click="jumpToChatList()" ng-mobile-click="jumpToChatList()"></button>
           <img class="avatar" ng-src="{{personDetail.pictureUrl}}" alt="User Avatar">
           <h2>{{personDetail.formattedName}}</h2>
           <h3>{{personDetail.headline}}</h3>
@@ -137,7 +139,7 @@
           <p>{{personDetail.summary}}</p>
           <div class="bottomBtns">
             <button id="posi-detail-btn" class="btn-group lower-btn pos-btn" style="visibility: hidden; background-image:url('./img/pos.png'); background-size:contain; background-repeat:no-repeat;"></button>
-            <button id="nope-detail-btn" class="btn-group higher-btn nope-btn" style="background-image:url('./img/nope.png'); background-size:contain; background-repeat:no-repeat;"></button>
+            <!--<button id="nope-detail-btn" class="btn-group higher-btn nope-btn" style="background-image:url('./img/nope.png'); background-size:contain; background-repeat:no-repeat;"></button>-->
             <button id="yeah-detail-btn" class="btn-group higher-btn yeap-btn" style="background-image:url('./img/yeap.png'); background-size:contain; background-repeat:no-repeat;"></button>
             <button id="srch-detail-btn" class="btn-group lower-btn srch-btn" style="visibility: hidden; background-image:url('./img/srch.png'); background-size:contain; background-repeat:no-repeat;"></button>
           </div>
@@ -155,6 +157,41 @@
           </ul>
           <input type="text" name="send" ng-model="input.text">
           <button ng-mobile-click="sendMessage(input.text)" ng-click="sendMessage(input.text)">Send</button>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="chatList.html" type="text/ng-template">
+      <ion-view>
+        <ion-content class="details" id="chat-list-content">
+          <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back"></button>
+          <img class="logo-title" src="./img/logo-title.png" alt="lynking logo">
+          <div class="list pending-list">
+            <span class="item item-avatar" ng-repeat="pending in pendingList track by $index">
+              <img class="avatar-img" ng-src='{{pending.requester.pictureUrl}}'>
+              <h2>{{pending.requester.formattedName}}</h2>
+              <p>{{pending.requester.headline}}</p>
+              <p class="linkedinId" style="display:none">{{pending.requester.linkedinId}}</p>
+              <span class="btn-right">
+                <button class="accept-btn" ng-click="acceptReq($event)"></button>
+                <button class="reject-btn" ng-click="rejectReq($event)"></button>
+                <button class="gochat-btn" style="display:none;"></button>
+              </span>
+            </span>
+          </div>
+          <div class="list friends-list">
+            <span class="item item-avatar" ng-repeat="friend in friendsList track by $index">
+              <img class="avatar-img" ng-src='{{friend.pictureUrl}}'>
+              <h2>{{friend.formattedName}}</h2>
+              <p>{{friend.headline}}</p>
+              <p class="linkedinId" style="display:none">{{friend.linkedinId}}</p>
+              <span class="btn-right">
+                <button class="accept-btn" style="display:none;"></button>
+                <button class="reject-btn" style="display:none;"></button>
+                <button class="gochat-btn"></button>
+              </span>
+            </span>
+          </div>
         </ion-content>
       </ion-view>
     </script>

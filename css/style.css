@@ -140,7 +140,7 @@ box {
     height: 70%;
     padding: 0 10px;
 }
-.item-avatar {
+.candidates .item-avatar {
     padding-left: 22px!important;
     padding-top: 14px;
     width: 95%;
@@ -150,15 +150,15 @@ box {
     left: 2.5%;
     border: none;
 }
-.item-avatar h2 {
+.candidates .item-avatar h2 {
     color: white;
     font-size: 2em;
 }
-.item-avatar h3 {
+.candidates .item-avatar h3 {
     color: white;
     font-size: 1em;
 }
-.item-avatar p {
+.candidates .item-avatar p {
     color: white;
     font-size: 0.8em;
 }
@@ -192,7 +192,67 @@ box {
     width: 100%;
     position: relative;
 }
+#detail-content .lower-btn {
+    width: 31%;
+}
 #detail-content .logo-title {
     margin-top: 24px;
     margin-bottom: 24px;
+}
+#detail-content .chat-list-btn {
+    margin-top: -53px;
+}
+
+/* chat list page */
+.chat-list-btn {
+    display: relative;
+    float: right;
+    clear: both;
+    margin-top: -40px;
+    margin-right: 10px;
+    min-width: 32px;
+    background-color: transparent;
+    background-image:url('../img/chat.png'); 
+    background-size:contain; 
+    background-repeat:no-repeat;
+}
+#chat-list-content .logo-title {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+#chat-list-content .item-avatar .avatar-img {
+    top: 6px;
+    left: 6px;
+    max-width: 60px;
+    max-height: 60px;
+}
+#chat-list-content .btn-right {
+    display: block;
+    float: right;
+    margin-top: -50px;
+    max-height: 50px;
+}
+#chat-list-content .list button {
+    clear: both;
+    max-width: 50px;
+    max-height: 50px;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.accept-btn {
+    background-image: url("../img/yeap.png");
+}
+.reject-btn {
+    background-image: url("../img/nope.png");
+}
+.gochat-btn {
+    background-image: url("../img/gochat.png");
+}
+#chat-list-content .list {
+    margin-bottom: 0;
+    padding-bottom: 0;
 }

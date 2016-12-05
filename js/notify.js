@@ -8,4 +8,7 @@ socket.on('notification', function (data) {
     //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
     // }
     socket.emit('client notification', { my: 'data' });
+    // if (data.receiver == profileLinkedinId)
+    // update chat button
+    document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage="url('../img/chat-new.png')";
 });
