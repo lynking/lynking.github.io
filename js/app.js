@@ -336,6 +336,9 @@ nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHist
   $scope.goBack = function () {
     $ionicHistory.goBack();
   }
+  $scope.goBackToHome = function() {
+    $state.go('index');
+  }
   $scope.go = function (path) {
     $location.path(path);
   }
