@@ -11,19 +11,33 @@ var CLIENT_SECRET = '2P3itf8w1G5kgnY9';
 var TOKEN_STATE = 'lynking123';
 var SERVER_URL = 'https://4113studio.com';//'https://lynking-node.us-west-1.elasticbeanstalk.com'; // dev 'http://localhost:8080'
 
+// glocal var
+var profileLinkedinId = "";
+var profilePictureUrl = "";
+var receiverAvatar = "";
+var receiverName = "";
+var receiverHeadLine = "";
+var receiverDistance = "";
+var receiverSummary = "";
+var receiverLinkedinId = "";
+
+// friends & pending list
+var friends = [];
+var pending = [];
+
 var socket = io(SERVER_URL);
 
 socket.on('notification', function (data) {
-  console.log(data);
-  // {
-  //   sender: '-AXeEda4CL',  // linkedinId
-  //   receiver: 'NiMjtTCXCQ', // linkedinId
-  //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
-  // }
-  socket.emit('client notification', { my: 'data' });
-  // if (data.receiver == profileLinkedinId)
-  // update chat button
-  document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage = "url('../img/chat-new.png')";
+    console.log(data);
+    // {
+    //   sender: '-AXeEda4CL',  // linkedinId
+    //   receiver: 'NiMjtTCXCQ', // linkedinId
+    //   type: 'friendRequest'  // 'friendRequest', 'acceptRequest' or 'denyRequest'
+    // }
+    if (data.receiver == profileLinkedinId) {
+      // update chat button
+      document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage="url('../img/chat-new.png')";
+    }
 });
 
 nameApp.factory('sharedData', function () {
@@ -46,20 +60,6 @@ nameApp.factory('sharedData', function () {
     matchedList: []
   }
 });
-
-// glocal var
-var profileLinkedinId = "";
-var profilePictureUrl = "";
-var receiverAvatar = "";
-var receiverName = "";
-var receiverHeadLine = "";
-var receiverDistance = "";
-var receiverSummary = "";
-var receiverLinkedinId = "";
-
-// friends & pending list
-var friends = [];
-var pending = [];
 
 nameApp.directive("ngMobileClick", [function () {
   return function (scope, elem, attrs) {
@@ -348,8 +348,10 @@ nameApp.controller('CandidatesCtrl', function ($scope, $http, $state, $ionicHist
     return;
   }
 
-  $scope.jumpToChatList = function () {
-    getPendingAndFriends(profileLinkedinId, function () {
+  $scope.jumpToChatList = function(){
+    getPendingAndFriends(profileLinkedinId, function(){
+      // remove little red dot!
+      document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage="url('../img/chat.png')";
       $state.go('chatList');
     });
   };
@@ -421,8 +423,11 @@ nameApp.controller('DetailsCtrl', function ($scope, $state, $ionicHistory, share
   $scope.goBack = function () {
     $ionicHistory.goBack();
   }
-  $scope.jumpToChatList = function () {
-    getPendingAndFriends(profileLinkedinId, function () {
+
+  $scope.jumpToChatList = function(){
+    getPendingAndFriends(profileLinkedinId, function(){
+      // remove little red dot!
+      document.getElementsByClassName("chat-list-btn")[0].style.backgroundImage="url('../img/chat.png')";
       $state.go('chatList');
     })
   }
@@ -495,7 +500,7 @@ nameApp.controller('ChatListCtrl', function ($scope, $state, $ionicHistory, shar
   }
 
   // go to chat!
-  $scope.goChat = function ($event) {
+  $scope.goChat = function(friend) {
     $state.go('chat', {
       linkedinId: profile.linkedinId,
       friendLinkedinId: friend.linkedinId
