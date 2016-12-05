@@ -148,6 +148,8 @@ function sendInivation(senderLinkedinId, receiverLinkedinId) {
     }, function errorCallback(response) {
       if (response.responseJSON.errorMessage == "A pending request already exists") {
         alert("invitation pending for confirmation :)");
+      } else if (response.responseJSON.errorMessage == "Requester and requested are already friends") {
+        alert("You are already connected! :)");
       } else {
         alert("Something goes wrong :( try again later!");
       }
