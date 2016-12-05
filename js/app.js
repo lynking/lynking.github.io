@@ -457,7 +457,6 @@ nameApp.controller('ChatListCtrl', function ($scope, $state, $ionicHistory, shar
   }
 
   var profile = sharedData.profile;
-  var friend = sharedData.friend;
   // pendingList and fiendList data
   $scope.pendingList = pending;
   $scope.friendsList = friends;
@@ -469,7 +468,7 @@ nameApp.controller('ChatListCtrl', function ($scope, $state, $ionicHistory, shar
     // post req
     $.ajax({
       method: 'PUT',
-      url: SERVER_URL + '/api/user/' + profile.linkedinId + '/friends/' + friend.linkedinId,
+      url: SERVER_URL + '/api/user/' + profile.linkedinId + '/friends/' + friendLinkedinId,
       data: {
         action: "accept"
       }
@@ -530,61 +529,62 @@ nameApp.controller('ChatCtrl', function ($scope, $state, $ionicHistory, sharedDa
       messagingSenderId: "489592513195"
     };
     firebase.initializeApp(config);
+    
+  }
 
-    // inital auth
-    $.ajax({
-      method: 'POST',
-      url: SERVER_URL + '/api/user/' + uid + '/chatToken'
-    })
-      .then(function (res) {
-        $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken);
+  // inital auth
+  $.ajax({
+    method: 'POST',
+    url: SERVER_URL + '/api/user/' + uid + '/chatToken'
+  })
+  .then(function (res) {
+    $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken);
 
-        var dbRef = firebase.database().ref('chats/' + uid + '/' + friendId);
-        var dbRefCopy = firebase.database().ref('chats/' + friendId + '/' + uid);
+    var dbRef = firebase.database().ref('chats/' + uid + '/' + friendId);
+    var dbRefCopy = firebase.database().ref('chats/' + friendId + '/' + uid);
 
-        dbRef.off();
+    dbRef.off();
 
-        // listen server to get message
-        dbRef.limitToLast(20).on('child_added', refreshMessage);
-        // dbRefCopy.limitToLast(12).on('child_added', refreshMessage);
+    // listen server to get message
+    dbRef.limitToLast(20).on('child_added', refreshMessage);
+    // dbRefCopy.limitToLast(12).on('child_added', refreshMessage);
 
-        $scope.dbRef = dbRef;
-        $scope.dbRefCopy = dbRefCopy;
+    $scope.dbRef = dbRef;
+    $scope.dbRefCopy = dbRefCopy;
 
-      })
-      .fail(function (err) {
-        alert(err.responseJSON.errorMessage);
-      });
+  })
+  .fail(function (err) {
+    alert(err.responseJSON.errorMessage);
+  });
 
-    // methods
-    $scope.goBack = function () {
-      $ionicHistory.goBack();
+  // methods
+  $scope.goBack = function() {
+    $ionicHistory.goBack();
+  }
+  /**
+   * send text to server (firebase)
+   */
+  $scope.sendMessage = function () {
+    var text = $scope.input.text;
+    if (text === null || text === '') {
+      return;
     }
-    /**
-     * send text to server (firebase)
-     */
-    $scope.sendMessage = function () {
-      var text = $scope.input.text;
-      if (text === null || text === '') {
-        return;
-      }
 
-      var curProfile = sharedData.profile;
-      var message = {
-        linkedinId: uid,
-        text: text,
-        photoUrl: curProfile.pictureUrl,
-        name: curProfile.formattedName,
-        // photoUrl: uid === profileLinkedinId ? profilePictureUrl : redirectAvatar,
-        // name: uid === profileLinkedinId ? profileName : redirectName,
-        timestamp: Date.now()
-      };
+    var curProfile = sharedData.profile;
+    var message = {
+      linkedinId: uid,
+      text: text,
+      photoUrl: curProfile.pictureUrl,
+      name: curProfile.formattedName,
+      // photoUrl: uid === profileLinkedinId ? profilePictureUrl : redirectAvatar,
+      // name: uid === profileLinkedinId ? profileName : redirectName,
+      timestamp: Date.now()
+    };
 
-      $scope.dbRef.push(message);
-      $scope.dbRefCopy.push(message);
+    $scope.dbRef.push(message);
+    $scope.dbRefCopy.push(message);
 
-      $scope.input.text = '';
-    }
+    $scope.input.text = '';
   }
 
   // refresh view message
