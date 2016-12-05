@@ -155,8 +155,8 @@
               {{message.name}} - {{message.text}}
             </li>
           </ul>
-          <input type="text" name="send" ng-model="input.text">
-          <button ng-click="sendMessage(input.text)" ng-key-enter="sendMessage(input.text)">Send</button>
+          <input type="text" name="send" ng-model="input.text" ng-key-enter="sendMessage(input.text)">
+          <button ng-click="sendMessage(input.text)">Send</button>
         </ion-content>
       </ion-view>
     </script>
