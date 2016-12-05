@@ -511,7 +511,7 @@ nameApp.controller('ChatCtrl', function($scope, $state, $ionicHistory, sharedDat
       url: SERVER_URL +'/api/user/'+uid+'/chatToken'
     })
     .then(function (res) {
-      $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken.chatToken);
+      $scope.auth = firebase.auth().signInWithCustomToken(res.chatToken);
 
       var dbRef = firebase.database().ref('chats/'+uid+'/'+friendId);
       var dbRefCopy = firebase.database().ref('chats/'+friendId+'/'+uid);
