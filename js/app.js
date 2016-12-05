@@ -456,7 +456,6 @@ nameApp.controller('ChatListCtrl', function ($scope, $state, $ionicHistory, shar
   }
 
   var profile = sharedData.profile;
-  var friend = sharedData.friend;
   // pendingList and fiendList data
   $scope.pendingList = pending;
   $scope.friendsList = friends;
@@ -468,7 +467,7 @@ nameApp.controller('ChatListCtrl', function ($scope, $state, $ionicHistory, shar
     // post req
     $.ajax({
       method: 'PUT',
-      url: SERVER_URL + '/api/user/' + profile.linkedinId + '/friends/' + friend.linkedinId,
+      url: SERVER_URL + '/api/user/' + profile.linkedinId + '/friends/' + friendLinkedinId,
       data: {
         action: "accept"
       }
