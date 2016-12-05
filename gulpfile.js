@@ -18,8 +18,8 @@ gulp.task('default', function() {
 gulp.task('build', ['css', 'js'], function () {
     return gulp.src('./index.src.html')
         .pipe(htmlreplace({
-            'css': 'css/style.min.css',
-            'js': 'js/app.min.js'
+            'css': 'css/style.min.css?'+Date.now(),
+            'js': 'js/app.min.js?'+Date.now()
         }))
         .pipe(rename('index.html'))
         .pipe(gulp.dest('./'));
@@ -39,7 +39,12 @@ gulp.task('css',['clean'], function() {
 
 gulp.task('js', ['clean'], function() {
     return gulp.src('./js/*.js')
-        .pipe(uglify())
+        .pipe(uglify({
+            mangle: false,
+            output: {
+                beautify: false
+            }
+        }))
         .pipe(rename({
             suffix: '.min'
         }))
