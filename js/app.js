@@ -205,7 +205,7 @@ function getPendingAndFriends(linkedinId, callback) {
       method: 'GET',
       url: SERVER_URL+'/api/user/'+linkedinId+'/friends'
     }).then(function successCallback(response) {
-      friends = response;
+      friends = response.friends;
       callback();
     })
   })
